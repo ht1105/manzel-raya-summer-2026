@@ -519,6 +519,33 @@
       gap: 4px;
     }
 
+    /* Sign up status */
+    .signup-status-row {
+      display: flex;
+      gap: 10px;
+      padding: 14px 18px;
+      flex-wrap: wrap;
+    }
+    .status-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border-radius: 99px;
+      border: 2px solid var(--border);
+      background: #F9F7F4;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .status-btn:hover { border-color: #ccc; color: var(--text); }
+    .status-btn.active-signed-up  { background: #ECFDF5; border-color: #34D399; color: #065F46; }
+    .status-btn.active-waitlisted { background: #FFFBEB; border-color: #FBBF24; color: #92400E; }
+    .status-btn.active-not-yet    { background: #F3F4F6; border-color: #9CA3AF; color: #374151; }
+
     /* Pack list */
     .pack-grid {
       display: flex;
@@ -1121,6 +1148,24 @@
           </div>
         </div>
 
+        <!-- Sign Up Status -->
+        <div class="section-card" style="margin-bottom:20px">
+          <div class="section-card-header">✅ Sign Up Status</div>
+          <div class="section-card-body">
+            <div class="signup-status-row" id="signup-status-${w.weekNum}">
+              <button class="status-btn" data-week="${w.weekNum}" data-status="signed-up" onclick="setStatus(${w.weekNum},'signed-up')">
+                <span class="status-icon">✅</span> Signed Up
+              </button>
+              <button class="status-btn" data-week="${w.weekNum}" data-status="waitlisted" onclick="setStatus(${w.weekNum},'waitlisted')">
+                <span class="status-icon">⏳</span> Wait Listed
+              </button>
+              <button class="status-btn" data-week="${w.weekNum}" data-status="not-yet" onclick="setStatus(${w.weekNum},'not-yet')">
+                <span class="status-icon">🔲</span> Not Yet
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Donde está Mica -->
         <div class="section-card" style="margin-bottom:20px">
           <div class="section-card-header">👩🏻 Donde está Mica</div>
@@ -1371,6 +1416,26 @@
   document.getElementById('hamburger').addEventListener('click', openDrawer);
   document.getElementById('drawer-close').addEventListener('click', closeDrawer);
   document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
+
+  // ── Sign up status ──
+  function setStatus(weekNum, status) {
+    localStorage.setItem(`signup-status-week-${weekNum}`, status);
+    renderStatus(weekNum, status);
+  }
+
+  function renderStatus(weekNum, status) {
+    const btns = document.querySelectorAll(`[data-week="${weekNum}"].status-btn`);
+    btns.forEach(btn => {
+      btn.classList.remove('active-signed-up','active-waitlisted','active-not-yet');
+      if (btn.dataset.status === status) btn.classList.add(`active-${status}`);
+    });
+  }
+
+  // Restore saved statuses on load
+  weeks.forEach(w => {
+    const saved = localStorage.getItem(`signup-status-week-${w.weekNum}`);
+    if (saved) renderStatus(w.weekNum, saved);
+  });
 
   // Load weather for all weeks on page load
   loadAllWeather();
