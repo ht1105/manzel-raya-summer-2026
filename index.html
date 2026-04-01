@@ -8,17 +8,16 @@
     :root {
       --sun: #F5A623;
       --sky: #4A90D9;
-      --grass: #5CB85C;
       --coral: #E8705A;
       --cream: #FFFBF5;
+      --sidebar-bg: #2C2C3E;
+      --sidebar-hover: #3C3C52;
+      --sidebar-active: #F5A623;
       --card-bg: #FFFFFF;
       --text: #2C2C2C;
-      --muted: #777;
+      --muted: #888;
       --border: #EDE8E0;
-      --mica-bg: #EFF6FF;
-      --mica-accent: #4A90D9;
-      --vacation-bg: #FFF8ED;
-      --vacation-accent: #F5A623;
+      --tbd: #CCCCCC;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,408 +26,455 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--cream);
       color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── Hero Photo ── */
-    .hero-photo-wrap {
-      background: #1a1a1a;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      max-height: 80vh;
+      height: 100vh;
       overflow: hidden;
     }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 220px;
+      min-width: 220px;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .sidebar-header {
+      padding: 20px 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sidebar-header h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.4;
+    }
+    .sidebar-header p {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 3px;
+    }
+
+    .nav-section-label {
+      padding: 16px 16px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px;
+      cursor: pointer;
+      color: rgba(255,255,255,0.65);
+      font-size: 13px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .nav-item:hover {
+      background: var(--sidebar-hover);
+      color: #fff;
+    }
+    .nav-item.active {
+      background: rgba(245,166,35,0.12);
+      color: var(--sun);
+      border-left-color: var(--sun);
+      font-weight: 600;
+    }
+    .nav-item .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+    .nav-item .nav-badge {
+      margin-left: auto;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.5);
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 99px;
+    }
+    .nav-item.active .nav-badge {
+      background: rgba(245,166,35,0.2);
+      color: var(--sun);
+    }
+
+    /* ── Main content ── */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Hero photo ── */
+    .hero-photo-wrap {
+      background: #111;
+      display: flex;
+      justify-content: center;
+      max-height: 340px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
     .hero-photo {
-      max-height: 80vh;
+      max-height: 340px;
       max-width: 100%;
       width: auto;
       display: block;
       object-fit: contain;
     }
 
-    /* ── Header ── */
-    header {
-      background: linear-gradient(135deg, #F5A623 0%, #E8705A 40%, #4A90D9 100%);
-      padding: 40px 24px 36px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+    /* ── Page header ── */
+    .page-header {
+      background: linear-gradient(135deg, #F5A623 0%, #E8705A 50%, #4A90D9 100%);
+      padding: 24px 32px;
+      flex-shrink: 0;
     }
-    header::before {
-      content: '☀️';
-      font-size: 120px;
-      position: absolute;
-      top: -20px; right: -10px;
-      opacity: 0.12;
-      line-height: 1;
-    }
-    header::after {
-      content: '🌊';
-      font-size: 100px;
-      position: absolute;
-      bottom: -20px; left: -10px;
-      opacity: 0.12;
-      line-height: 1;
-    }
-    header h1 {
-      font-size: clamp(28px, 5vw, 48px);
+    .page-header h1 {
+      font-size: 26px;
       font-weight: 800;
       color: #fff;
-      letter-spacing: -0.5px;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+      text-shadow: 0 1px 8px rgba(0,0,0,0.2);
     }
-    header p.subtitle {
-      margin-top: 8px;
-      font-size: 17px;
-      color: rgba(255,255,255,0.88);
-      font-weight: 400;
-    }
-
-    /* ── Kids legend ── */
-    .legend {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-    .legend-pill {
-      background: rgba(255,255,255,0.22);
-      border: 1.5px solid rgba(255,255,255,0.5);
-      color: #fff;
-      padding: 5px 16px;
-      border-radius: 999px;
+    .page-header p {
       font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.2px;
+      color: rgba(255,255,255,0.85);
+      margin-top: 4px;
     }
 
-    /* ── Summary bar ── */
-    .summary-bar {
-      display: flex;
-      justify-content: center;
-      gap: 32px;
-      flex-wrap: wrap;
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
-    }
-    .summary-stat {
-      text-align: center;
-    }
-    .summary-stat .num {
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--coral);
-      line-height: 1;
-    }
-    .summary-stat .label {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 3px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    /* ── Content area ── */
+    .content {
+      flex: 1;
+      padding: 28px 32px;
     }
 
-    /* ── Main layout ── */
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 32px 20px 60px;
-    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
-    .section-title {
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
-      margin-bottom: 16px;
-      margin-top: 36px;
-    }
-
-    /* ── Week cards ── */
-    .weeks-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
-      gap: 20px;
-    }
-
-    .week-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      border: 1.5px solid var(--border);
-      overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-      transition: box-shadow 0.2s;
-    }
-    .week-card:hover {
-      box-shadow: 0 6px 24px rgba(0,0,0,0.1);
-    }
-    .week-card.mica-week {
-      border-color: var(--mica-accent);
-    }
-    .week-card.vacation-week {
-      border-color: var(--vacation-accent);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 18px 12px;
-      border-bottom: 1px solid var(--border);
-      gap: 10px;
-    }
-    .week-card.mica-week .card-header { background: var(--mica-bg); }
-    .week-card.vacation-week .card-header { background: var(--vacation-bg); }
-
-    .week-label {
-      display: flex;
-      flex-direction: column;
-    }
-    .week-label .week-num {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--muted);
-    }
-    .week-label .week-date {
+    /* ── Overview table ── */
+    .overview-title {
       font-size: 20px;
       font-weight: 700;
-      color: var(--text);
-      line-height: 1.2;
-    }
-    .week-label .week-thru {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .header-right {
+      margin-bottom: 20px;
       display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
+      align-items: center;
+      gap: 8px;
     }
 
-    .type-badge {
+    .overview-table-wrap {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-size: 14px;
+    }
+    thead tr {
+      background: var(--sidebar-bg);
+    }
+    thead th {
+      padding: 13px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.7);
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-top: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    tbody tr:hover { background: #FFFBF0; }
+    tbody tr.mica-row { background: #F0F7FF; }
+    tbody tr.mica-row:hover { background: #E4F0FF; }
+    tbody td {
+      padding: 13px 16px;
+      vertical-align: middle;
+    }
+    td.week-cell {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    td.dates-cell {
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    td.camp-cell a {
+      color: var(--coral);
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1.5px solid rgba(232,112,90,0.3);
+    }
+    td.camp-cell a:hover { border-bottom-color: var(--coral); }
+    td.camp-cell .mica-label {
+      color: var(--sky);
+      font-weight: 700;
+    }
+    td.time-cell {
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    td.time-cell.tbd { color: var(--tbd); font-style: italic; font-weight: 400; }
+    .attendee-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+    .chip {
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .chip.both { background: #FEF3C7; color: #92400E; }
+    .chip.manzel-only { background: #DBEAFE; color: #1E40AF; }
+    .chip.raya-only { background: #FCE7F3; color: #9D174D; }
+    .chip.vacation { background: #F3F4F6; color: #6B7280; text-decoration: line-through; }
+    .view-btn {
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .view-btn:hover {
+      border-color: var(--sun);
+      color: var(--sun);
+    }
+
+    /* ── Week panel ── */
+    .week-panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .week-panel-title { font-size: 22px; font-weight: 800; }
+    .week-panel-sub { font-size: 14px; color: var(--muted); margin-top: 3px; }
+    .week-meta-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .meta-chip {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 4px 12px;
-      border-radius: 999px;
+      padding: 5px 12px;
+      border-radius: 99px;
       font-size: 13px;
       font-weight: 600;
     }
-    .type-badge.camp {
-      background: #E8F5E9;
-      color: #2E7D32;
-    }
-    .type-badge.mica {
-      background: #DBEAFE;
-      color: #1D4ED8;
-    }
+    .meta-chip.camp { background: #ECFDF5; color: #065F46; }
+    .meta-chip.mica { background: #EFF6FF; color: #1E40AF; }
+    .meta-chip.time { background: #FFF7ED; color: #9A3412; }
+    .meta-chip.vacation { background: #FEF2F2; color: #991B1B; }
 
-    .vacation-tags {
-      display: flex;
-      gap: 5px;
-    }
-    .vacation-tag {
-      background: #FFF3CD;
-      color: #7C5000;
-      border: 1px solid #F5A623;
-      padding: 2px 9px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-    }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
 
-    /* ── Card body ── */
-    .card-body {
-      padding: 16px 18px 18px;
+    .section-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
     }
-
-    .camp-name {
-      font-size: 19px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 14px;
-    }
-    .camp-name.no-camp {
-      color: var(--mica-accent);
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .info-cell {
-      background: #F9F7F4;
-      border-radius: 10px;
-      padding: 10px 12px;
-    }
-    .info-cell .info-label {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-    .info-cell .info-value {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .info-cell .info-value.tbd {
-      color: #BBBBBB;
-      font-weight: 400;
-      font-style: italic;
-    }
-    .info-cell .info-value.highlight {
-      color: var(--coral);
-    }
-
-    .info-cell.full-width {
-      grid-column: 1 / -1;
-    }
-
-    .instructions-cell {
-      background: #F9F7F4;
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 10px;
-    }
-    .instructions-cell .info-label {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-    .instructions-cell .info-value {
-      font-size: 14px;
-      color: var(--text);
-      line-height: 1.5;
-    }
-    .instructions-cell .info-value.tbd {
-      color: #BBBBBB;
-      font-style: italic;
-    }
-
-    .pack-list {
-      background: #F0FDF4;
-      border: 1px solid #BBF7D0;
-      border-radius: 10px;
-      padding: 10px 12px;
-    }
-    .pack-list .info-label {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: #16A34A;
-      margin-bottom: 6px;
-    }
-    .pack-list ul {
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-    .pack-list ul li {
-      background: #DCFCE7;
-      color: #166534;
+    .section-card-header {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
       font-size: 12px;
-      font-weight: 500;
-      padding: 3px 10px;
-      border-radius: 999px;
-    }
-    .pack-list .tbd {
-      font-size: 13px;
-      color: #BBBBBB;
-      font-style: italic;
-    }
-
-    /* ── Extra activity note ── */
-    .extra-activity {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      background: #FAFAFA;
       display: flex;
       align-items: center;
-      gap: 6px;
-      background: #FEF9EE;
-      border: 1px solid #FDE68A;
-      border-radius: 8px;
-      padding: 8px 12px;
+      gap: 7px;
+    }
+    .section-card-body { padding: 0; }
+
+    /* Daily schedule */
+    .day-block { border-top: 1px solid var(--border); }
+    .day-block:first-child { border-top: none; }
+    .day-label {
+      padding: 10px 18px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #fff;
+      background: var(--sidebar-bg);
+    }
+    .time-slot {
+      display: flex;
+      align-items: flex-start;
+      padding: 10px 18px;
+      border-top: 1px solid #F3F0EB;
+      gap: 14px;
+    }
+    .time-slot:first-of-type { border-top: none; }
+    .slot-time {
+      min-width: 90px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--coral);
+      padding-top: 1px;
+    }
+    .slot-activity {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      flex: 1;
+    }
+    .slot-activity.tbd { color: var(--tbd); font-style: italic; font-weight: 400; }
+    .slot-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Contacts */
+    .contact-row {
+      display: flex;
+      align-items: center;
+      padding: 12px 18px;
+      border-top: 1px solid #F3F0EB;
+      gap: 14px;
+    }
+    .contact-row:first-child { border-top: none; }
+    .contact-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sun), var(--coral));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .contact-info { flex: 1; }
+    .contact-name { font-size: 14px; font-weight: 600; }
+    .contact-role { font-size: 12px; color: var(--muted); }
+    .contact-details { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 3px; }
+    .contact-detail {
+      font-size: 12px;
+      color: var(--sky);
+      font-weight: 500;
+    }
+    .contact-detail.tbd { color: var(--tbd); font-style: italic; }
+
+    /* Pack list */
+    .pack-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 16px 18px;
+    }
+    .pack-item {
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+      padding: 5px 13px;
+      border-radius: 99px;
       font-size: 13px;
       font-weight: 500;
-      color: #78350F;
-      margin-bottom: 10px;
     }
-
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      padding: 24px;
+    .pack-tbd {
+      padding: 16px 18px;
       font-size: 13px;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
+      color: var(--tbd);
+      font-style: italic;
     }
 
-    @media (max-width: 500px) {
-      .weeks-grid { grid-template-columns: 1fr; }
-      .info-grid { grid-template-columns: 1fr; }
+    /* Notes */
+    .notes-body {
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .notes-body.tbd { color: var(--tbd); font-style: italic; }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      body { flex-direction: column; height: auto; overflow: auto; }
+      .sidebar { width: 100%; min-width: 0; flex-direction: row; overflow-x: auto; overflow-y: hidden; height: auto; }
+      .sidebar-header { display: none; }
+      .nav-section-label { display: none; }
+      .nav-item { padding: 12px 14px; white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; }
+      .nav-item.active { border-bottom-color: var(--sun); border-left: none; }
+      .hero-photo-wrap { max-height: 240px; }
+      .page-header { padding: 16px 20px; }
+      .content { padding: 20px; }
     }
   </style>
 </head>
 <body>
 
-<div class="hero-photo-wrap">
-  <img class="hero-photo" src="summer-hero.jpg" alt="Manzel & Raya" />
+<!-- ── Sidebar ── -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h2>☀️ Manzel & Raya</h2>
+    <p>Summer 2026</p>
+  </div>
+  <div class="nav-section-label">Menu</div>
+  <div class="nav-item active" data-tab="overview">
+    <span class="nav-icon">📋</span> Overview
+  </div>
+  <div class="nav-section-label">Weeks</div>
+  <div id="week-nav"></div>
+</nav>
+
+<!-- ── Main ── -->
+<div class="main">
+  <div class="hero-photo-wrap">
+    <img class="hero-photo" src="summer-hero.jpg" alt="Manzel & Raya" />
+  </div>
+  <div class="page-header">
+    <h1>Manzel & Raya's Summer 2026 ☀️</h1>
+    <p>June 29 – September 7 &nbsp;·&nbsp; Your one-stop summer hub</p>
+  </div>
+
+  <div class="content">
+    <!-- Overview tab -->
+    <div class="tab-panel active" id="tab-overview">
+      <div class="overview-title">📋 Summer at a Glance</div>
+      <div class="overview-table-wrap">
+        <table id="overview-table">
+          <thead>
+            <tr>
+              <th>Week</th>
+              <th>Dates</th>
+              <th>Camp / Activity</th>
+              <th>Drop-off</th>
+              <th>Pick-up</th>
+              <th>Who's Going</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="overview-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Week tabs (generated) -->
+    <div id="week-panels"></div>
+  </div>
 </div>
-
-<header>
-  <h1>☀️ Manzel & Raya's Summer 2026</h1>
-  <p class="subtitle">June 29 – September 7 &nbsp;·&nbsp; Your one-stop summer hub</p>
-  <div class="legend">
-    <span class="legend-pill">🧒 Manzel</span>
-    <span class="legend-pill">👧🏻 Raya</span>
-  </div>
-</header>
-
-<div class="summary-bar">
-  <div class="summary-stat">
-    <div class="num">11</div>
-    <div class="label">Weeks</div>
-  </div>
-  <div class="summary-stat">
-    <div class="num">9</div>
-    <div class="label">Camp Weeks</div>
-  </div>
-  <div class="summary-stat">
-    <div class="num">2</div>
-    <div class="label">Mica Weeks</div>
-  </div>
-  <div class="summary-stat">
-    <div class="num">7</div>
-    <div class="label">Different Camps</div>
-  </div>
-</div>
-
-<main>
-  <div class="section-title">Week-by-Week Schedule</div>
-
-  <div class="weeks-grid" id="weeks"></div>
-</main>
-
-<footer>
-  Manzel & Raya's Summer 2026 &nbsp;·&nbsp; Last updated March 2026
-</footer>
 
 <script>
   const weeks = [
@@ -439,13 +485,23 @@
       type: "camp",
       campName: "Discovery Kids",
       campLink: "https://www.hisawyer.com/discovery-kids/schedules/activity-set/1719656",
+      campNote: null,
       vacation: [],
       extraActivity: null,
       dropoffTime: "9:00 AM",
       dropoffInstructions: null,
       pickupTime: "3:00 PM",
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday:    [],
+        Tuesday:   [],
+        Wednesday: [],
+        Thursday:  [],
+        Friday:    []
+      },
+      toPack: [],
+      notes: null
     },
     {
       weekNum: 2,
@@ -453,27 +509,41 @@
       endDate: "July 10",
       type: "camp",
       campName: "Robot Camp",
+      campLink: null,
+      campNote: null,
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
+      },
+      toPack: [],
+      notes: null
     },
     {
       weekNum: 3,
       startDate: "July 13",
       endDate: "July 17",
       type: "mica",
-      campName: null,
+      campName: "With Mica",
+      campLink: null,
+      campNote: null,
       vacation: ["Manzel"],
       extraActivity: "Heksher State Park",
       dropoffTime: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
+      },
+      toPack: [],
+      notes: null
     },
     {
       weekNum: 4,
@@ -481,13 +551,20 @@
       endDate: "July 24",
       type: "camp",
       campName: "The Tiny Scientist",
+      campLink: null,
+      campNote: null,
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
+      },
+      toPack: [],
+      notes: null
     },
     {
       weekNum: 5,
@@ -495,13 +572,20 @@
       endDate: "July 31",
       type: "camp",
       campName: "Trailblazers",
+      campLink: null,
+      campNote: null,
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
+      },
+      toPack: [],
+      notes: null
     },
     {
       weekNum: 6,
@@ -509,13 +593,20 @@
       endDate: "August 7",
       type: "camp",
       campName: "The Tiny Scientist",
+      campLink: null,
+      campNote: null,
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
       dropoffInstructions: null,
       pickupTime: "3:30 PM",
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
+      },
+      toPack: [],
+      notes: null
     },
     {
       weekNum: 7,
@@ -523,13 +614,20 @@
       endDate: "August 14",
       type: "camp",
       campName: "World of Wonder",
+      campLink: null,
+      campNote: null,
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
+      },
+      toPack: [],
+      notes: null
     },
     {
       weekNum: 8,
@@ -537,6 +635,7 @@
       endDate: "August 21",
       type: "camp",
       campName: "Prospect Gymnastics",
+      campLink: null,
       campNote: "Bed-Stuy",
       vacation: [],
       extraActivity: null,
@@ -544,7 +643,12 @@
       dropoffInstructions: null,
       pickupTime: "2:30 PM",
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
+      },
+      toPack: [],
+      notes: null
     },
     {
       weekNum: 9,
@@ -552,13 +656,20 @@
       endDate: "August 28",
       type: "camp",
       campName: "Mi Casita",
+      campLink: null,
+      campNote: null,
       vacation: ["Raya"],
       extraActivity: null,
       dropoffTime: null,
       dropoffInstructions: null,
       pickupTime: "3:00 PM",
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
+      },
+      toPack: [],
+      notes: null
     },
     {
       weekNum: 10,
@@ -566,115 +677,227 @@
       endDate: "September 4",
       type: "camp",
       campName: "Mi Casita",
+      campLink: null,
+      campNote: null,
       vacation: ["Raya"],
       extraActivity: null,
       dropoffTime: null,
       dropoffInstructions: null,
       pickupTime: "3:00 PM",
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
+      },
+      toPack: [],
+      notes: null
     },
     {
       weekNum: 11,
       startDate: "September 7",
       endDate: "September 11",
       type: "mica",
-      campName: null,
+      campName: "With Mica",
+      campLink: null,
+      campNote: null,
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
-      toPack: []
+      contacts: [],
+      dailySchedule: {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
+      },
+      toPack: [],
+      notes: null
     }
   ];
 
-  function tbd(val, fallback) {
-    if (val) return `<span class="info-value highlight">${val}</span>`;
-    return fallback
-      ? `<span class="info-value">${fallback}</span>`
-      : `<span class="info-value tbd">TBD</span>`;
+  // ── Helpers ──
+  function getAttendees(w) {
+    if (w.vacation.includes("Manzel") && w.vacation.includes("Raya")) return { label: "No Kids", cls: "vacation" };
+    if (w.vacation.includes("Manzel")) return { label: "Raya only", cls: "raya-only" };
+    if (w.vacation.includes("Raya"))   return { label: "Manzel only", cls: "manzel-only" };
+    return { label: "Manzel & Raya", cls: "both" };
   }
 
-  function tbdText(val) {
-    if (val) return `<span class="info-value">${val}</span>`;
-    return `<span class="info-value tbd">TBD</span>`;
+  function tbdSpan(val, fallback) {
+    if (val) return `<span style="font-weight:600">${fallback || val}</span>`;
+    return `<span class="tbd" style="font-style:italic;color:var(--tbd)">TBD</span>`;
   }
 
-  function renderCard(w) {
-    const isMica = w.type === "mica";
-    const hasVacation = w.vacation && w.vacation.length > 0;
-    const cardClass = isMica ? "week-card mica-week" : hasVacation ? "week-card vacation-week" : "week-card";
+  // ── Overview table ──
+  const tbody = document.getElementById('overview-tbody');
+  weeks.forEach(w => {
+    const att = getAttendees(w);
+    const isMica = w.type === 'mica';
+    const campCell = isMica
+      ? `<span class="mica-label">👩🏻 With Mica${w.extraActivity ? ` · ${w.extraActivity}` : ''}</span>`
+      : w.campLink
+        ? `<a href="${w.campLink}" target="_blank">${w.campName}</a>${w.campNote ? ` <span style="color:var(--muted);font-size:12px">(${w.campNote})</span>` : ''}`
+        : `<strong>${w.campName}</strong>${w.campNote ? ` <span style="color:var(--muted);font-size:12px">(${w.campNote})</span>` : ''}`;
 
-    const vacationTags = (w.vacation || []).map(name =>
-      `<span class="vacation-tag">🏖 ${name} vacation</span>`
-    ).join('');
+    tbody.innerHTML += `
+      <tr class="${isMica ? 'mica-row' : ''}" onclick="showWeek(${w.weekNum})">
+        <td class="week-cell">Wk ${w.weekNum}</td>
+        <td class="dates-cell">${w.startDate} – ${w.endDate}</td>
+        <td class="camp-cell">${campCell}</td>
+        <td class="time-cell ${w.dropoffTime ? '' : 'tbd'}">${w.dropoffTime || 'TBD'}</td>
+        <td class="time-cell ${w.pickupTime ? '' : 'tbd'}">${w.pickupTime || 'TBD'}</td>
+        <td><span class="chip ${att.cls}">${att.label}</span></td>
+        <td><button class="view-btn" onclick="event.stopPropagation();showWeek(${w.weekNum})">View →</button></td>
+      </tr>`;
+  });
 
-    const typeBadge = isMica
-      ? `<span class="type-badge mica">👩🏻 With Mica</span>`
-      : `<span class="type-badge camp">🏕 Camp</span>`;
+  // ── Week panels ──
+  const panelsEl = document.getElementById('week-panels');
+  const weekNav  = document.getElementById('week-nav');
 
-    const campTitle = isMica
-      ? `<div class="camp-name no-camp">With Mica</div>`
-      : `<div class="camp-name">${w.campLink ? `<a href="${w.campLink}" target="_blank" style="color:inherit;text-decoration:none;border-bottom:2px solid #F5A623;">${w.campName}</a>` : w.campName}${w.campNote ? ` <span style="font-size:13px;font-weight:400;color:var(--muted);">(${w.campNote})</span>` : ''}</div>`;
+  weeks.forEach(w => {
+    const att = getAttendees(w);
+    const isMica = w.type === 'mica';
 
-    const extraActivity = w.extraActivity
-      ? `<div class="extra-activity">📍 ${w.extraActivity}</div>`
-      : '';
+    // Sidebar nav item
+    weekNav.innerHTML += `
+      <div class="nav-item" data-tab="week-${w.weekNum}" onclick="showWeek(${w.weekNum})">
+        <span class="nav-icon">${isMica ? '👩🏻' : '🏕'}</span>
+        <span style="flex:1">Wk ${w.weekNum} · ${w.startDate}</span>
+      </div>`;
 
-    const packSection = (w.toPack && w.toPack.length > 0)
-      ? `<ul>${w.toPack.map(i => `<li>${i}</li>`).join('')}</ul>`
-      : `<div class="tbd">TBD — add items to pack</div>`;
+    // Daily schedule HTML
+    let scheduleHTML = '';
+    const days = Object.keys(w.dailySchedule);
+    days.forEach(day => {
+      const slots = w.dailySchedule[day];
+      const slotsHTML = slots.length > 0
+        ? slots.map(s => `
+            <div class="time-slot">
+              <div class="slot-time">${s.time}</div>
+              <div>
+                <div class="slot-activity">${s.activity}</div>
+                ${s.note ? `<div class="slot-note">${s.note}</div>` : ''}
+              </div>
+            </div>`).join('')
+        : `<div class="time-slot"><div class="slot-time" style="color:var(--tbd)">—</div><div class="slot-activity tbd">Schedule TBD</div></div>`;
+      scheduleHTML += `
+        <div class="day-block">
+          <div class="day-label">${day}</div>
+          ${slotsHTML}
+        </div>`;
+    });
 
-    return `
-      <div class="${cardClass}">
-        <div class="card-header">
-          <div class="week-label">
-            <span class="week-num">Week ${w.weekNum}</span>
-            <span class="week-date">${w.startDate}</span>
-            <span class="week-thru">thru ${w.endDate}</span>
-          </div>
-          <div class="header-right">
-            ${typeBadge}
-            ${vacationTags ? `<div class="vacation-tags">${vacationTags}</div>` : ''}
+    // Contacts HTML
+    const contactsHTML = w.contacts.length > 0
+      ? w.contacts.map(c => `
+          <div class="contact-row">
+            <div class="contact-avatar">👤</div>
+            <div class="contact-info">
+              <div class="contact-name">${c.name}</div>
+              <div class="contact-role">${c.role}</div>
+              <div class="contact-details">
+                ${c.phone ? `<span class="contact-detail">📞 ${c.phone}</span>` : ''}
+                ${c.email ? `<span class="contact-detail">✉️ ${c.email}</span>` : ''}
+              </div>
+            </div>
+          </div>`).join('')
+      : `<div class="contact-row"><div class="contact-info"><div class="contact-name" style="color:var(--tbd);font-style:italic;font-weight:400">No contacts added yet</div></div></div>`;
+
+    // Pack list HTML
+    const packHTML = w.toPack.length > 0
+      ? `<div class="pack-grid">${w.toPack.map(i => `<span class="pack-item">✓ ${i}</span>`).join('')}</div>`
+      : `<div class="pack-tbd">Nothing added yet — tap to add items</div>`;
+
+    // Camp name display
+    const campDisplay = isMica ? '👩🏻 With Mica' : w.campLink
+      ? `<a href="${w.campLink}" target="_blank" style="color:var(--coral);text-decoration:none;border-bottom:2px solid rgba(232,112,90,0.3)">${w.campName}</a>`
+      : w.campName;
+
+    panelsEl.innerHTML += `
+      <div class="tab-panel" id="tab-week-${w.weekNum}">
+        <div class="week-panel-header">
+          <div>
+            <div class="week-panel-title">Week ${w.weekNum} · ${campDisplay}${w.campNote ? ` <span style="font-size:14px;font-weight:400;color:var(--muted)">(${w.campNote})</span>` : ''}</div>
+            <div class="week-panel-sub">${w.startDate} – ${w.endDate}</div>
+            <div class="week-meta-chips">
+              <span class="meta-chip ${isMica ? 'mica' : 'camp'}">${isMica ? '👩🏻 Mica week' : '🏕 Camp week'}</span>
+              ${w.dropoffTime ? `<span class="meta-chip time">🚗 Drop-off ${w.dropoffTime}</span>` : ''}
+              ${w.pickupTime  ? `<span class="meta-chip time">🏁 Pick-up ${w.pickupTime}</span>`  : ''}
+              <span class="meta-chip ${att.cls === 'both' ? 'camp' : att.cls === 'raya-only' ? 'camp' : 'camp'}" style="background:#F5F3FF;color:#5B21B6">👧🏻 ${att.label}</span>
+              ${w.extraActivity ? `<span class="meta-chip" style="background:#FEF9EE;color:#78350F">📍 ${w.extraActivity}</span>` : ''}
+              ${w.vacation.length > 0 ? w.vacation.map(v => `<span class="meta-chip vacation">🏖 ${v} on vacation</span>`).join('') : ''}
+            </div>
           </div>
         </div>
-        <div class="card-body">
-          ${campTitle}
-          ${extraActivity}
-          <div class="info-grid">
-            <div class="info-cell">
-              <div class="info-label">Drop-off Time</div>
-              ${tbd(w.dropoffTime)}
-            </div>
-            <div class="info-cell">
-              <div class="info-label">Pick-up Time</div>
-              ${tbd(w.pickupTime)}
+
+        <div class="two-col">
+          <div>
+            <!-- Daily Schedule -->
+            <div class="section-card">
+              <div class="section-card-header">📅 Daily Schedule</div>
+              <div class="section-card-body">${scheduleHTML}</div>
             </div>
           </div>
-          <div class="instructions-cell">
-            <div class="info-label">Drop-off Instructions</div>
-            ${w.dropoffInstructions
-              ? `<div class="info-value">${w.dropoffInstructions}</div>`
-              : `<div class="info-value tbd">TBD — add drop-off notes</div>`}
-          </div>
-          <div class="instructions-cell">
-            <div class="info-label">Pick-up Instructions</div>
-            ${w.pickupInstructions
-              ? `<div class="info-value">${w.pickupInstructions}</div>`
-              : `<div class="info-value tbd">TBD — add pick-up notes</div>`}
-          </div>
-          <div class="pack-list">
-            <div class="info-label">🎒 What to Pack</div>
-            ${packSection}
+          <div>
+            <!-- Contacts -->
+            <div class="section-card">
+              <div class="section-card-header">📞 Camp Contacts</div>
+              <div class="section-card-body">${contactsHTML}</div>
+            </div>
+            <!-- Drop-off & Pick-up -->
+            <div class="section-card">
+              <div class="section-card-header">🚗 Drop-off & Pick-up</div>
+              <div class="section-card-body">
+                <div class="contact-row" style="gap:20px">
+                  <div style="flex:1">
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px">Drop-off Time</div>
+                    <div style="font-size:18px;font-weight:700;color:${w.dropoffTime ? 'var(--coral)' : 'var(--tbd)'}">${w.dropoffTime || 'TBD'}</div>
+                  </div>
+                  <div style="flex:1">
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px">Pick-up Time</div>
+                    <div style="font-size:18px;font-weight:700;color:${w.pickupTime ? 'var(--coral)' : 'var(--tbd)'}">${w.pickupTime || 'TBD'}</div>
+                  </div>
+                </div>
+                <div style="padding:0 18px 14px">
+                  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">Drop-off Instructions</div>
+                  <div style="font-size:13px;color:${w.dropoffInstructions ? 'var(--text)' : 'var(--tbd)'};font-style:${w.dropoffInstructions ? 'normal' : 'italic'}">${w.dropoffInstructions || 'TBD'}</div>
+                  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px;margin-top:12px">Pick-up Instructions</div>
+                  <div style="font-size:13px;color:${w.pickupInstructions ? 'var(--text)' : 'var(--tbd)'};font-style:${w.pickupInstructions ? 'normal' : 'italic'}">${w.pickupInstructions || 'TBD'}</div>
+                </div>
+              </div>
+            </div>
+            <!-- Pack list -->
+            <div class="section-card">
+              <div class="section-card-header">🎒 What to Pack</div>
+              <div class="section-card-body">${packHTML}</div>
+            </div>
+            ${w.notes ? `
+            <div class="section-card">
+              <div class="section-card-header">📝 Notes</div>
+              <div class="section-card-body"><div class="notes-body">${w.notes}</div></div>
+            </div>` : ''}
           </div>
         </div>
-      </div>
-    `;
+      </div>`;
+  });
+
+  // ── Navigation ──
+  function showTab(tabId) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const panel = document.getElementById('tab-' + tabId);
+    const navItem = document.querySelector(`[data-tab="${tabId}"]`);
+    if (panel)   panel.classList.add('active');
+    if (navItem) navItem.classList.add('active');
+    document.querySelector('.main').scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  document.getElementById('weeks').innerHTML = weeks.map(renderCard).join('');
+  function showWeek(num) { showTab('week-' + num); }
+
+  document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
+    item.addEventListener('click', () => showTab(item.dataset.tab));
+  });
 </script>
 </body>
 </html>
