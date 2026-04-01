@@ -1220,7 +1220,10 @@
           <div>
             <!-- Contacts -->
             <div class="section-card">
-              <div class="section-card-header">📞 Camp Contacts</div>
+              <div class="section-card-header" style="display:flex;align-items:center;justify-content:space-between">
+                <span>📞 Camp Contacts</span>
+                <button onclick="clearContacts(${w.weekNum})" style="font-size:11px;padding:3px 8px;border:1px solid var(--muted);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer">Clear</button>
+              </div>
               <div class="section-card-body">${contactsHTML}</div>
             </div>
             <!-- Drop-off & Pick-up -->
@@ -1448,6 +1451,11 @@
   document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
 
   // ── Sign up status ──
+  function clearContacts(weekNum) {
+    localStorage.removeItem(`contacts-week-${weekNum}`);
+    location.reload();
+  }
+
   function setStatus(weekNum, status) {
     localStorage.setItem(`signup-status-week-${weekNum}`, status);
     renderStatus(weekNum, status);
