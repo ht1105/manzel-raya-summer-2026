@@ -320,7 +320,25 @@
       letter-spacing: 0.6px;
       color: #fff;
       background: var(--sidebar-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
+    .day-weather {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+      color: rgba(255,255,255,0.75);
+    }
+    .day-weather .wx-icon { font-size: 16px; }
+    .day-weather .wx-temps { font-weight: 700; color: #fff; }
+    .day-weather .wx-desc { color: rgba(255,255,255,0.6); font-size: 11px; }
+    .day-weather.wx-loading { color: rgba(255,255,255,0.3); font-style: italic; font-size: 11px; }
+    .day-weather.wx-unavailable { color: rgba(255,255,255,0.3); font-size: 11px; }
     .time-slot {
       display: flex;
       align-items: flex-start;
@@ -482,6 +500,7 @@
       weekNum: 1,
       startDate: "June 29",
       endDate: "July 3",
+      mondayISO: "2026-06-29",
       type: "camp",
       campName: "Discovery Kids",
       campLink: "https://www.hisawyer.com/discovery-kids/schedules/activity-set/1719656",
@@ -507,6 +526,7 @@
       weekNum: 2,
       startDate: "July 6",
       endDate: "July 10",
+      mondayISO: "2026-07-06",
       type: "camp",
       campName: "Robot Camp",
       campLink: null,
@@ -528,6 +548,7 @@
       weekNum: 3,
       startDate: "July 13",
       endDate: "July 17",
+      mondayISO: "2026-07-13",
       type: "mica",
       campName: "With Mica",
       campLink: null,
@@ -549,6 +570,7 @@
       weekNum: 4,
       startDate: "July 20",
       endDate: "July 24",
+      mondayISO: "2026-07-20",
       type: "camp",
       campName: "The Tiny Scientist",
       campLink: null,
@@ -570,6 +592,7 @@
       weekNum: 5,
       startDate: "July 27",
       endDate: "July 31",
+      mondayISO: "2026-07-27",
       type: "camp",
       campName: "Trailblazers",
       campLink: null,
@@ -591,6 +614,7 @@
       weekNum: 6,
       startDate: "August 3",
       endDate: "August 7",
+      mondayISO: "2026-08-03",
       type: "camp",
       campName: "The Tiny Scientist",
       campLink: null,
@@ -612,6 +636,7 @@
       weekNum: 7,
       startDate: "August 10",
       endDate: "August 14",
+      mondayISO: "2026-08-10",
       type: "camp",
       campName: "World of Wonder",
       campLink: null,
@@ -633,6 +658,7 @@
       weekNum: 8,
       startDate: "August 17",
       endDate: "August 21",
+      mondayISO: "2026-08-17",
       type: "camp",
       campName: "Prospect Gymnastics",
       campLink: null,
@@ -654,6 +680,7 @@
       weekNum: 9,
       startDate: "August 24",
       endDate: "August 28",
+      mondayISO: "2026-08-24",
       type: "camp",
       campName: "Mi Casita",
       campLink: null,
@@ -675,6 +702,7 @@
       weekNum: 10,
       startDate: "August 31",
       endDate: "September 4",
+      mondayISO: "2026-08-31",
       type: "camp",
       campName: "Mi Casita",
       campLink: null,
@@ -696,6 +724,7 @@
       weekNum: 11,
       startDate: "September 7",
       endDate: "September 11",
+      mondayISO: "2026-09-07",
       type: "mica",
       campName: "With Mica",
       campLink: null,
@@ -783,7 +812,10 @@
         : `<div class="time-slot"><div class="slot-time" style="color:var(--tbd)">—</div><div class="slot-activity tbd">Schedule TBD</div></div>`;
       scheduleHTML += `
         <div class="day-block">
-          <div class="day-label">${day}</div>
+          <div class="day-label">
+            <span>${day}</span>
+            <span class="day-weather wx-loading" id="wx-${w.weekNum}-${day}">loading…</span>
+          </div>
           ${slotsHTML}
         </div>`;
     });
@@ -891,6 +923,9 @@
     if (panel)   panel.classList.add('active');
     if (navItem) navItem.classList.add('active');
     document.querySelector('.main').scrollTo({ top: 0, behavior: 'smooth' });
+    // Fetch weather when switching to a week tab
+    const match = tabId.match(/^week-(\d+)$/);
+    if (match) fetchWeather(parseInt(match[1]));
   }
 
   function showWeek(num) { showTab('week-' + num); }
@@ -898,6 +933,96 @@
   document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
     item.addEventListener('click', () => showTab(item.dataset.tab));
   });
+
+  // ── Weather ──
+  const LAT = 40.6782, LON = -73.9442; // Brooklyn, NY
+  const wxCache = {};
+  const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+
+  const WMO = {
+    0:  ['☀️','Clear'],
+    1:  ['🌤️','Mostly clear'], 2: ['⛅','Partly cloudy'], 3: ['☁️','Overcast'],
+    45: ['🌫️','Fog'], 48: ['🌫️','Icy fog'],
+    51: ['🌦️','Light drizzle'], 53: ['🌦️','Drizzle'], 55: ['🌧️','Heavy drizzle'],
+    61: ['🌧️','Light rain'], 63: ['🌧️','Rain'], 65: ['🌧️','Heavy rain'],
+    71: ['🌨️','Light snow'], 73: ['🌨️','Snow'], 75: ['❄️','Heavy snow'],
+    80: ['🌦️','Showers'], 81: ['🌧️','Heavy showers'], 82: ['⛈️','Violent showers'],
+    95: ['⛈️','Thunderstorm'], 96: ['⛈️','Thunderstorm'], 99: ['⛈️','Thunderstorm']
+  };
+
+  function wxInfo(code) {
+    return WMO[code] || WMO[Math.floor(code/10)*10] || ['🌡️','Unknown'];
+  }
+
+  function addDays(isoDate, n) {
+    const d = new Date(isoDate + 'T12:00:00');
+    d.setDate(d.getDate() + n);
+    return d.toISOString().slice(0, 10);
+  }
+
+  async function fetchWeather(weekNum) {
+    if (wxCache[weekNum]) return renderWeather(weekNum, wxCache[weekNum]);
+
+    const week = weeks.find(w => w.weekNum === weekNum);
+    if (!week) return;
+
+    const monday = week.mondayISO;
+    const friday = addDays(monday, 4);
+    const today  = new Date().toISOString().slice(0, 10);
+    const maxForecastDate = addDays(today, 15);
+
+    // If entire week is beyond forecast range, show available date
+    if (monday > maxForecastDate) {
+      DAYS.forEach((day, i) => {
+        const el = document.getElementById(`wx-${weekNum}-${day}`);
+        if (el) {
+          el.className = 'day-weather wx-unavailable';
+          const avail = new Date(addDays(monday, i - 15 + 0));
+          el.textContent = `Forecast available ~${avail.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
+        }
+      });
+      return;
+    }
+
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=America%2FNew_York&temperature_unit=fahrenheit&start_date=${monday}&end_date=${friday}`;
+      const res  = await fetch(url);
+      const data = await res.json();
+      wxCache[weekNum] = data.daily;
+      renderWeather(weekNum, data.daily);
+    } catch(e) {
+      DAYS.forEach(day => {
+        const el = document.getElementById(`wx-${weekNum}-${day}`);
+        if (el) { el.className = 'day-weather wx-unavailable'; el.textContent = 'Weather unavailable'; }
+      });
+    }
+  }
+
+  function renderWeather(weekNum, daily) {
+    const week = weeks.find(w => w.weekNum === weekNum);
+    const today = new Date().toISOString().slice(0, 10);
+    const maxForecastDate = addDays(today, 15);
+
+    DAYS.forEach((day, i) => {
+      const el = document.getElementById(`wx-${weekNum}-${day}`);
+      if (!el) return;
+      const dateISO = addDays(week.mondayISO, i);
+
+      if (dateISO > maxForecastDate || !daily.weathercode[i]) {
+        el.className = 'day-weather wx-unavailable';
+        const avail = new Date(dateISO);
+        avail.setDate(avail.getDate() - 15);
+        el.textContent = `Forecast available ~${avail.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
+        return;
+      }
+
+      const [icon, desc] = wxInfo(daily.weathercode[i]);
+      const hi = Math.round(daily.temperature_2m_max[i]);
+      const lo = Math.round(daily.temperature_2m_min[i]);
+      el.className = 'day-weather';
+      el.innerHTML = `<span class="wx-icon">${icon}</span><span class="wx-temps">${hi}° / ${lo}°</span><span class="wx-desc">${desc}</span>`;
+    });
+  }
 </script>
 </body>
 </html>
