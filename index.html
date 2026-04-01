@@ -337,8 +337,14 @@
     .day-weather .wx-icon { font-size: 16px; }
     .day-weather .wx-temps { font-weight: 700; color: #fff; }
     .day-weather .wx-desc { color: rgba(255,255,255,0.6); font-size: 11px; }
-    .day-weather.wx-loading { color: rgba(255,255,255,0.3); font-style: italic; font-size: 11px; }
-    .day-weather.wx-unavailable { color: rgba(255,255,255,0.3); font-size: 11px; }
+    .day-weather.wx-loading { color: rgba(255,255,255,0.5); font-style: italic; font-size: 11px; }
+    .day-weather.wx-unavailable {
+      background: rgba(255,255,255,0.1);
+      border-radius: 99px;
+      padding: 2px 8px;
+      color: rgba(255,255,255,0.6);
+      font-size: 11px;
+    }
     .time-slot {
       display: flex;
       align-items: flex-start;
@@ -923,9 +929,6 @@
     if (panel)   panel.classList.add('active');
     if (navItem) navItem.classList.add('active');
     document.querySelector('.main').scrollTo({ top: 0, behavior: 'smooth' });
-    // Fetch weather when switching to a week tab
-    const match = tabId.match(/^week-(\d+)$/);
-    if (match) fetchWeather(parseInt(match[1]));
   }
 
   function showWeek(num) { showTab('week-' + num); }
@@ -936,7 +939,6 @@
 
   // ── Weather ──
   const LAT = 40.6782, LON = -73.9442; // Brooklyn, NY
-  const wxCache = {};
   const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
 
   const WMO = {
@@ -960,69 +962,73 @@
     return d.toISOString().slice(0, 10);
   }
 
-  async function fetchWeather(weekNum) {
-    if (wxCache[weekNum]) return renderWeather(weekNum, wxCache[weekNum]);
-
-    const week = weeks.find(w => w.weekNum === weekNum);
-    if (!week) return;
-
-    const monday = week.mondayISO;
-    const friday = addDays(monday, 4);
-    const today  = new Date().toISOString().slice(0, 10);
-    const maxForecastDate = addDays(today, 15);
-
-    // If entire week is beyond forecast range, show available date
-    if (monday > maxForecastDate) {
-      DAYS.forEach((day, i) => {
-        const el = document.getElementById(`wx-${weekNum}-${day}`);
-        if (el) {
-          el.className = 'day-weather wx-unavailable';
-          const avail = new Date(addDays(monday, i - 15 + 0));
-          el.textContent = `Forecast available ~${avail.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
-        }
-      });
-      return;
-    }
-
-    try {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=America%2FNew_York&temperature_unit=fahrenheit&start_date=${monday}&end_date=${friday}`;
-      const res  = await fetch(url);
-      const data = await res.json();
-      wxCache[weekNum] = data.daily;
-      renderWeather(weekNum, data.daily);
-    } catch(e) {
-      DAYS.forEach(day => {
-        const el = document.getElementById(`wx-${weekNum}-${day}`);
-        if (el) { el.className = 'day-weather wx-unavailable'; el.textContent = 'Weather unavailable'; }
-      });
-    }
+  function formatDate(isoDate) {
+    return new Date(isoDate + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
-  function renderWeather(weekNum, daily) {
-    const week = weeks.find(w => w.weekNum === weekNum);
+  async function loadAllWeather() {
     const today = new Date().toISOString().slice(0, 10);
     const maxForecastDate = addDays(today, 15);
 
-    DAYS.forEach((day, i) => {
-      const el = document.getElementById(`wx-${weekNum}-${day}`);
-      if (!el) return;
-      const dateISO = addDays(week.mondayISO, i);
+    // Group weeks into: fetchable vs. future
+    const fetchable = weeks.filter(w => w.mondayISO <= maxForecastDate);
+    const future    = weeks.filter(w => w.mondayISO > maxForecastDate);
 
-      if (dateISO > maxForecastDate || !daily.weathercode[i]) {
+    // Mark future weeks immediately
+    future.forEach(w => {
+      DAYS.forEach((day, i) => {
+        const el = document.getElementById(`wx-${w.weekNum}-${day}`);
+        if (!el) return;
+        const dateISO = addDays(w.mondayISO, i);
+        const availOn = addDays(dateISO, -15);
         el.className = 'day-weather wx-unavailable';
-        const avail = new Date(dateISO);
-        avail.setDate(avail.getDate() - 15);
-        el.textContent = `Forecast available ~${avail.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
-        return;
-      }
-
-      const [icon, desc] = wxInfo(daily.weathercode[i]);
-      const hi = Math.round(daily.temperature_2m_max[i]);
-      const lo = Math.round(daily.temperature_2m_min[i]);
-      el.className = 'day-weather';
-      el.innerHTML = `<span class="wx-icon">${icon}</span><span class="wx-temps">${hi}° / ${lo}°</span><span class="wx-desc">${desc}</span>`;
+        el.textContent = `🗓 Forecast available ${formatDate(availOn)}`;
+      });
     });
+
+    // Fetch live weather for weeks within range
+    if (fetchable.length === 0) return;
+    const earliest = fetchable[0].mondayISO;
+    const latest   = addDays(fetchable[fetchable.length - 1].mondayISO, 4);
+    const clampedEnd = latest > maxForecastDate ? maxForecastDate : latest;
+
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=America%2FNew_York&temperature_unit=fahrenheit&start_date=${earliest}&end_date=${clampedEnd}`;
+      const res  = await fetch(url);
+      const data = await res.json();
+      const daily = data.daily;
+
+      fetchable.forEach(w => {
+        DAYS.forEach((day, i) => {
+          const el = document.getElementById(`wx-${w.weekNum}-${day}`);
+          if (!el) return;
+          const dateISO = addDays(w.mondayISO, i);
+          const idx = daily.time.indexOf(dateISO);
+          if (idx === -1 || dateISO > maxForecastDate) {
+            const availOn = addDays(dateISO, -15);
+            el.className = 'day-weather wx-unavailable';
+            el.textContent = `🗓 Forecast available ${formatDate(availOn)}`;
+            return;
+          }
+          const [icon, desc] = wxInfo(daily.weathercode[idx]);
+          const hi = Math.round(daily.temperature_2m_max[idx]);
+          const lo = Math.round(daily.temperature_2m_min[idx]);
+          el.className = 'day-weather';
+          el.innerHTML = `<span class="wx-icon">${icon}</span><span class="wx-temps">${hi}° / ${lo}°</span><span class="wx-desc">${desc}</span>`;
+        });
+      });
+    } catch(e) {
+      fetchable.forEach(w => {
+        DAYS.forEach(day => {
+          const el = document.getElementById(`wx-${w.weekNum}-${day}`);
+          if (el) { el.className = 'day-weather wx-unavailable'; el.textContent = 'Weather unavailable'; }
+        });
+      });
+    }
   }
+
+  // Load weather for all weeks on page load
+  loadAllWeather();
 </script>
 </body>
 </html>
