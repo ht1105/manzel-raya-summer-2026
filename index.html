@@ -454,6 +454,38 @@
       gap: 5px;
     }
 
+    /* Mica schedule */
+    .mica-slot {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px 18px;
+      border-top: 1px solid #F3F0EB;
+    }
+    .mica-slot:first-child { border-top: none; }
+    .mica-time-range {
+      min-width: 110px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #7C3AED;
+      padding-top: 1px;
+      flex-shrink: 0;
+    }
+    .mica-slot-detail { flex: 1; }
+    .mica-activity {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .mica-location {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     /* Pack list */
     .pack-grid {
       display: flex;
@@ -973,6 +1005,26 @@
             <div class="section-card">
               <div class="section-card-header">🎒 What to Pack</div>
               <div class="section-card-body">${packHTML}</div>
+            </div>
+            <!-- Where is Mica -->
+            <div class="section-card">
+              <div class="section-card-header">👩🏻 Where is Mica</div>
+              <div class="section-card-body">
+                <div class="mica-slot">
+                  <div class="mica-time-range">9:00 AM – 2:00 PM</div>
+                  <div class="mica-slot-detail">
+                    <div class="mica-activity">Watching Leo</div>
+                    <div class="mica-location">📍 Casa Leo</div>
+                  </div>
+                </div>
+                <div class="mica-slot">
+                  <div class="mica-time-range">3:00 PM – 6:00 PM</div>
+                  <div class="mica-slot-detail">
+                    <div class="mica-activity">Nanny Share</div>
+                    <div class="mica-location">📍 Casa Raya</div>
+                  </div>
+                </div>
+              </div>
             </div>
             ${w.notes ? `
             <div class="section-card">
