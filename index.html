@@ -402,9 +402,9 @@
     .contact-detail.tbd { color: var(--tbd); font-style: italic; }
     .contact-field-row {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: 8px;
-      padding: 4px 0;
+      padding: 6px 0;
       border-bottom: 1px solid #F3F0EB;
     }
     .contact-field-row:last-child { border-bottom: none; }
@@ -414,14 +414,45 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: var(--muted);
-      min-width: 110px;
+      min-width: 120px;
+      flex-shrink: 0;
     }
     .contact-field-value {
       font-size: 13px;
       font-weight: 500;
       color: var(--text);
+      flex: 1;
+      min-width: 0;
     }
     .contact-field-value.tbd { color: var(--tbd); font-style: italic; font-weight: 400; }
+    [contenteditable] {
+      outline: none;
+      border-radius: 6px;
+      padding: 3px 7px;
+      transition: background 0.15s, box-shadow 0.15s;
+      cursor: text;
+    }
+    [contenteditable]:hover {
+      background: #F5F3FF;
+    }
+    [contenteditable]:focus {
+      background: #EDE9FE;
+      box-shadow: 0 0 0 2px #7C3AED33;
+    }
+    [contenteditable].saved-flash {
+      background: #D1FAE5;
+      transition: background 0.3s;
+    }
+    .contact-edit-hint {
+      padding: 8px 18px;
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+      border-top: 1px solid #F3F0EB;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
 
     /* Pack list */
     .pack-grid {
@@ -849,28 +880,31 @@
     });
 
     // Contacts HTML
+    const saved = JSON.parse(localStorage.getItem(`contacts-week-${w.weekNum}`) || '{}');
+    const c = { ...( w.contacts[0] || {}), ...saved };
     const contactsHTML = `
       <div class="contact-row">
         <div class="contact-avatar">👤</div>
-        <div class="contact-info">
+        <div class="contact-info" style="width:100%">
           <div class="contact-field-row">
             <span class="contact-field-label">Contact Name</span>
-            <span class="contact-field-value ${w.contacts[0]?.name ? '' : 'tbd'}">${w.contacts[0]?.name || 'TBD'}</span>
+            <span class="contact-field-value ${c.name ? '' : 'tbd'}" contenteditable="true" data-week="${w.weekNum}" data-field="name" data-placeholder="Add name">${c.name || 'Add name'}</span>
           </div>
           <div class="contact-field-row">
             <span class="contact-field-label">Role</span>
-            <span class="contact-field-value ${w.contacts[0]?.role ? '' : 'tbd'}">${w.contacts[0]?.role || 'TBD'}</span>
+            <span class="contact-field-value ${c.role ? '' : 'tbd'}" contenteditable="true" data-week="${w.weekNum}" data-field="role" data-placeholder="e.g. Camp Director">${c.role || 'e.g. Camp Director'}</span>
           </div>
           <div class="contact-field-row">
             <span class="contact-field-label">Contact Method</span>
-            <span class="contact-field-value ${w.contacts[0]?.contactMethod ? '' : 'tbd'}">${w.contacts[0]?.contactMethod || 'TBD — e.g. WhatsApp, Email, Phone'}</span>
+            <span class="contact-field-value ${c.contactMethod ? '' : 'tbd'}" contenteditable="true" data-week="${w.weekNum}" data-field="contactMethod" data-placeholder="e.g. WhatsApp, Email, Phone">${c.contactMethod || 'e.g. WhatsApp, Email, Phone'}</span>
           </div>
           <div class="contact-field-row">
             <span class="contact-field-label">Details</span>
-            <span class="contact-field-value ${(w.contacts[0]?.phone || w.contacts[0]?.email) ? '' : 'tbd'}">${w.contacts[0]?.phone ? '📞 ' + w.contacts[0].phone : w.contacts[0]?.email ? '✉️ ' + w.contacts[0].email : 'TBD'}</span>
+            <span class="contact-field-value ${(c.phone || c.email) ? '' : 'tbd'}" contenteditable="true" data-week="${w.weekNum}" data-field="phone" data-placeholder="Phone number or email">${c.phone || c.email || 'Phone number or email'}</span>
           </div>
         </div>
-      </div>`;
+      </div>
+      <div class="contact-edit-hint">✏️ Click any field above to edit — changes save automatically</div>`;
 
     // Pack list HTML
     const packHTML = w.toPack.length > 0
@@ -1056,6 +1090,43 @@
       });
     }
   }
+
+  // ── Editable contacts ──
+  document.addEventListener('focus', e => {
+    const el = e.target;
+    if (!el.hasAttribute('contenteditable')) return;
+    // Clear placeholder on focus
+    if (el.textContent === el.dataset.placeholder) {
+      el.textContent = '';
+      el.classList.remove('tbd');
+    }
+  }, true);
+
+  document.addEventListener('blur', e => {
+    const el = e.target;
+    if (!el.hasAttribute('contenteditable')) return;
+    const weekNum = el.dataset.week;
+    const field   = el.dataset.field;
+    const value   = el.textContent.trim();
+
+    // Restore placeholder if empty
+    if (!value) {
+      el.textContent = el.dataset.placeholder;
+      el.classList.add('tbd');
+    } else {
+      el.classList.remove('tbd');
+    }
+
+    // Save to localStorage
+    const key  = `contacts-week-${weekNum}`;
+    const data = JSON.parse(localStorage.getItem(key) || '{}');
+    data[field] = value;
+    localStorage.setItem(key, JSON.stringify(data));
+
+    // Flash green to confirm save
+    el.classList.add('saved-flash');
+    setTimeout(() => el.classList.remove('saved-flash'), 800);
+  }, true);
 
   // Load weather for all weeks on page load
   loadAllWeather();
