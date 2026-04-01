@@ -794,10 +794,9 @@
         Friday:    []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: "All registrations are non-transferable and all programs are held rain or shine. We accommodate schedule change requests until June 1 (unless the camp session runs in June, then cancellations have to be made 4 weeks in advance). Please note that schedule change requests are dependent on availability. Cancellations before June 1 will receive a full refund of the camp session(s) and/or extra item(s) purchased, minus a $60 administrative fee per transaction (credit card processing fees are non-refundable). Cancellations after June 1 will not receive a refund. All requests to reschedule or cancel camp must be made in writing to bzeducation@wcs.org."
     },
-    {
-      weekNum: 2,
       startDate: "July 6",
       endDate: "July 10",
       mondayISO: "2026-07-06",
@@ -816,7 +815,8 @@
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: null
     },
     {
       weekNum: 3,
@@ -838,7 +838,8 @@
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: null
     },
     {
       weekNum: 4,
@@ -860,7 +861,8 @@
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: null
     },
     {
       weekNum: 5,
@@ -882,7 +884,8 @@
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: null
     },
     {
       weekNum: 6,
@@ -904,7 +907,8 @@
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: null
     },
     {
       weekNum: 7,
@@ -926,7 +930,8 @@
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: null
     },
     {
       weekNum: 8,
@@ -948,7 +953,8 @@
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: null
     },
     {
       weekNum: 9,
@@ -970,7 +976,8 @@
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: null
     },
     {
       weekNum: 10,
@@ -992,7 +999,8 @@
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: null
     },
     {
       weekNum: 11,
@@ -1014,7 +1022,8 @@
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
       toPack: [],
-      notes: null
+      notes: null,
+      reschedulePolicy: null
     }
   ];
 
@@ -1233,6 +1242,12 @@
               <div class="section-card-header">📝 Notes</div>
               <div class="section-card-body"><div class="notes-body">${w.notes}</div></div>
             </div>` : ''}
+            <div class="section-card">
+              <div class="section-card-header">🔄 Rescheduling Policy</div>
+              <div class="section-card-body">
+                <div class="notes-body ${w.reschedulePolicy ? '' : 'tbd'}">${w.reschedulePolicy || 'No rescheduling policy added yet.'}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>`;
