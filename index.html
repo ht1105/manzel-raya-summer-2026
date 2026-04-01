@@ -782,6 +782,7 @@
       vacation: [],
       extraActivity: null,
       dropoffTime: "9:00 AM",
+      dropoffLocation: null,
       dropoffInstructions: null,
       pickupTime: "3:00 PM",
       pickupInstructions: null,
@@ -809,19 +810,8 @@
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
+      dropoffLocation: "1 University Plaza, Brooklyn, NY 11201",
       dropoffInstructions: null,
-      pickupTime: null,
-      pickupInstructions: null,
-      contacts: [],
-      dailySchedule: {
-        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
-      },
-      toPack: [],
-      notes: null,
-      reschedulePolicy: null
-    },
-    {
-      weekNum: 3,
       startDate: "July 13",
       endDate: "July 17",
       mondayISO: "2026-07-13",
@@ -832,6 +822,7 @@
       vacation: ["Manzel"],
       extraActivity: "Heksher State Park",
       dropoffTime: null,
+      dropoffLocation: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
@@ -855,6 +846,7 @@
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
+      dropoffLocation: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
@@ -878,6 +870,7 @@
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
+      dropoffLocation: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
@@ -901,6 +894,7 @@
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
+      dropoffLocation: null,
       dropoffInstructions: null,
       pickupTime: "3:30 PM",
       pickupInstructions: null,
@@ -924,6 +918,7 @@
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
+      dropoffLocation: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
@@ -947,6 +942,7 @@
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
+      dropoffLocation: null,
       dropoffInstructions: null,
       pickupTime: "2:30 PM",
       pickupInstructions: null,
@@ -970,6 +966,7 @@
       vacation: ["Raya"],
       extraActivity: null,
       dropoffTime: null,
+      dropoffLocation: null,
       dropoffInstructions: null,
       pickupTime: "3:00 PM",
       pickupInstructions: null,
@@ -993,6 +990,7 @@
       vacation: ["Raya"],
       extraActivity: null,
       dropoffTime: null,
+      dropoffLocation: null,
       dropoffInstructions: null,
       pickupTime: "3:00 PM",
       pickupInstructions: null,
@@ -1016,6 +1014,7 @@
       vacation: [],
       extraActivity: null,
       dropoffTime: null,
+      dropoffLocation: null,
       dropoffInstructions: null,
       pickupTime: null,
       pickupInstructions: null,
@@ -1227,7 +1226,9 @@
                   </div>
                 </div>
                 <div style="padding:0 18px 14px">
-                  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">Drop-off Instructions</div>
+                  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">Drop-off Location</div>
+                  <div style="font-size:13px;color:${w.dropoffLocation ? 'var(--text)' : 'var(--tbd)'};font-style:${w.dropoffLocation ? 'normal' : 'italic'}">${w.dropoffLocation ? `<a href="https://maps.apple.com/?q=${encodeURIComponent(w.dropoffLocation)}" target="_blank" style="color:var(--sky)">${w.dropoffLocation}</a>` : 'TBD'}</div>
+                  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px;margin-top:12px">Drop-off Instructions</div>
                   <div style="font-size:13px;color:${w.dropoffInstructions ? 'var(--text)' : 'var(--tbd)'};font-style:${w.dropoffInstructions ? 'normal' : 'italic'}">${w.dropoffInstructions || 'TBD'}</div>
                   <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px;margin-top:12px">Pick-up Instructions</div>
                   <div style="font-size:13px;color:${w.pickupInstructions ? 'var(--text)' : 'var(--tbd)'};font-style:${w.pickupInstructions ? 'normal' : 'italic'}">${w.pickupInstructions || 'TBD'}</div>
