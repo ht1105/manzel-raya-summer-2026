@@ -606,8 +606,9 @@
       }
 
       /* Main scrolls */
-      .main { flex: 1; overflow-y: auto; overflow-x: hidden; }
-      .hero-photo-wrap { max-height: 200px; }
+      .main { flex: 1; overflow-y: auto; overflow-x: hidden; min-height: 0; }
+      .hero-photo-wrap { max-height: 260px; background: #111; }
+      .hero-photo { max-height: 260px; width: 100%; object-fit: cover; object-position: center 38%; }
       .page-header { padding: 14px 16px; }
       .page-header h1 { font-size: 19px; }
       .page-header p { font-size: 12px; }
@@ -640,33 +641,15 @@
       .week-panel-title { font-size: 17px; }
       .section-card { border-radius: 12px; }
       .contact-field-label { min-width: 90px; font-size: 10px; }
-
-      /* Bottom tab bar */
-      .mobile-bottom-bar {
-        display: flex !important;
-        background: #fff;
-        border-top: 1px solid var(--border);
-        flex-shrink: 0;
-        z-index: 100;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      .bottom-tab {
-        flex: 1; min-width: 64px;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        padding: 8px 4px; font-size: 10px; font-weight: 600; color: var(--muted);
-        cursor: pointer; border-top: 2px solid transparent; white-space: nowrap;
-        gap: 3px; transition: color 0.15s;
-      }
-      .bottom-tab .tab-icon { font-size: 18px; line-height: 1; }
-      .bottom-tab.active { color: var(--sun); border-top-color: var(--sun); }
+      .details-bar { padding: 0 14px; }
+      .details-select { min-width: 0; width: 100%; }
     }
 
     /* Hidden on desktop, shown via media query above */
     .mobile-topbar,
     .mobile-drawer,
-    .drawer-overlay,
-    .mobile-bottom-bar { display: none; }
+    .drawer-overlay { display: none; }
+    .mobile-bottom-bar { display: none !important; }
   </style>
 </head>
 <body>
@@ -756,14 +739,6 @@
     <!-- Week tabs (generated) -->
     <div id="week-panels"></div>
   </div>
-</div>
-
-<!-- ── Mobile bottom tab bar ── -->
-<div class="mobile-bottom-bar" id="mobile-bottom-bar">
-  <div class="bottom-tab active" data-tab="overview" onclick="showTab('overview')">
-    <span class="tab-icon">📋</span>Overview
-  </div>
-  <div id="bottom-bar-weeks"></div>
 </div>
 
 <script>
@@ -1221,7 +1196,7 @@
   // ── Navigation ──
   function showTab(tabId) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item, .bottom-tab').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     const panel = document.getElementById('tab-' + tabId);
     if (panel) panel.classList.add('active');
     document.querySelectorAll(`[data-tab="${tabId}"]`).forEach(el => el.classList.add('active'));
@@ -1373,21 +1348,14 @@
   });
 
   // ── Mobile nav population ──
-  const drawerWeekNav  = document.getElementById('drawer-week-nav');
-  const bottomBarWeeks = document.getElementById('bottom-bar-weeks');
+  const drawerWeekNav = document.getElementById('drawer-week-nav');
 
   weeks.forEach(w => {
     const isMica = w.type === 'mica';
-    // Drawer
     drawerWeekNav.innerHTML += `
       <div class="nav-item" data-tab="week-${w.weekNum}" onclick="showWeek(${w.weekNum});closeDrawer()">
         <span class="nav-icon">${isMica ? '👩🏻' : '🏕'}</span>
         <span style="flex:1">Wk ${w.weekNum} · ${w.startDate}</span>
-      </div>`;
-    // Bottom bar
-    bottomBarWeeks.innerHTML += `
-      <div class="bottom-tab" data-tab="week-${w.weekNum}" onclick="showWeek(${w.weekNum})">
-        <span class="tab-icon">${isMica ? '👩🏻' : '🏕'}</span>Wk ${w.weekNum}
       </div>`;
   });
 
