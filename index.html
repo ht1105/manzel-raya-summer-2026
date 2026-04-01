@@ -400,6 +400,28 @@
       font-weight: 500;
     }
     .contact-detail.tbd { color: var(--tbd); font-style: italic; }
+    .contact-field-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 4px 0;
+      border-bottom: 1px solid #F3F0EB;
+    }
+    .contact-field-row:last-child { border-bottom: none; }
+    .contact-field-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      min-width: 110px;
+    }
+    .contact-field-value {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .contact-field-value.tbd { color: var(--tbd); font-style: italic; font-weight: 400; }
 
     /* Pack list */
     .pack-grid {
@@ -827,20 +849,28 @@
     });
 
     // Contacts HTML
-    const contactsHTML = w.contacts.length > 0
-      ? w.contacts.map(c => `
-          <div class="contact-row">
-            <div class="contact-avatar">👤</div>
-            <div class="contact-info">
-              <div class="contact-name">${c.name}</div>
-              <div class="contact-role">${c.role}</div>
-              <div class="contact-details">
-                ${c.phone ? `<span class="contact-detail">📞 ${c.phone}</span>` : ''}
-                ${c.email ? `<span class="contact-detail">✉️ ${c.email}</span>` : ''}
-              </div>
-            </div>
-          </div>`).join('')
-      : `<div class="contact-row"><div class="contact-info"><div class="contact-name" style="color:var(--tbd);font-style:italic;font-weight:400">No contacts added yet</div></div></div>`;
+    const contactsHTML = `
+      <div class="contact-row">
+        <div class="contact-avatar">👤</div>
+        <div class="contact-info">
+          <div class="contact-field-row">
+            <span class="contact-field-label">Contact Name</span>
+            <span class="contact-field-value ${w.contacts[0]?.name ? '' : 'tbd'}">${w.contacts[0]?.name || 'TBD'}</span>
+          </div>
+          <div class="contact-field-row">
+            <span class="contact-field-label">Role</span>
+            <span class="contact-field-value ${w.contacts[0]?.role ? '' : 'tbd'}">${w.contacts[0]?.role || 'TBD'}</span>
+          </div>
+          <div class="contact-field-row">
+            <span class="contact-field-label">Contact Method</span>
+            <span class="contact-field-value ${w.contacts[0]?.contactMethod ? '' : 'tbd'}">${w.contacts[0]?.contactMethod || 'TBD — e.g. WhatsApp, Email, Phone'}</span>
+          </div>
+          <div class="contact-field-row">
+            <span class="contact-field-label">Details</span>
+            <span class="contact-field-value ${(w.contacts[0]?.phone || w.contacts[0]?.email) ? '' : 'tbd'}">${w.contacts[0]?.phone ? '📞 ' + w.contacts[0].phone : w.contacts[0]?.email ? '✉️ ' + w.contacts[0].email : 'TBD'}</span>
+          </div>
+        </div>
+      </div>`;
 
     // Pack list HTML
     const packHTML = w.toPack.length > 0
