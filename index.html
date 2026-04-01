@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manzel & Raya's Summer 2026</title>
+  <style>
+    :root {
+      --sun: #F5A623;
+      --sky: #4A90D9;
+      --grass: #5CB85C;
+      --coral: #E8705A;
+      --cream: #FFFBF5;
+      --card-bg: #FFFFFF;
+      --text: #2C2C2C;
+      --muted: #777;
+      --border: #EDE8E0;
+      --mica-bg: #EFF6FF;
+      --mica-accent: #4A90D9;
+      --vacation-bg: #FFF8ED;
+      --vacation-accent: #F5A623;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Hero Photo ── */
+    .hero-photo-wrap {
+      background: #1a1a1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-height: 80vh;
+      overflow: hidden;
+    }
+    .hero-photo {
+      max-height: 80vh;
+      max-width: 100%;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #F5A623 0%, #E8705A 40%, #4A90D9 100%);
+      padding: 40px 24px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '☀️';
+      font-size: 120px;
+      position: absolute;
+      top: -20px; right: -10px;
+      opacity: 0.12;
+      line-height: 1;
+    }
+    header::after {
+      content: '🌊';
+      font-size: 100px;
+      position: absolute;
+      bottom: -20px; left: -10px;
+      opacity: 0.12;
+      line-height: 1;
+    }
+    header h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+    header p.subtitle {
+      margin-top: 8px;
+      font-size: 17px;
+      color: rgba(255,255,255,0.88);
+      font-weight: 400;
+    }
+
+    /* ── Kids legend ── */
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .legend-pill {
+      background: rgba(255,255,255,0.22);
+      border: 1.5px solid rgba(255,255,255,0.5);
+      color: #fff;
+      padding: 5px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    /* ── Summary bar ── */
+    .summary-bar {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+    }
+    .summary-stat {
+      text-align: center;
+    }
+    .summary-stat .num {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--coral);
+      line-height: 1;
+    }
+    .summary-stat .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      margin-top: 36px;
+    }
+
+    /* ── Week cards ── */
+    .weeks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 20px;
+    }
+
+    .week-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      transition: box-shadow 0.2s;
+    }
+    .week-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    }
+    .week-card.mica-week {
+      border-color: var(--mica-accent);
+    }
+    .week-card.vacation-week {
+      border-color: var(--vacation-accent);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      gap: 10px;
+    }
+    .week-card.mica-week .card-header { background: var(--mica-bg); }
+    .week-card.vacation-week .card-header { background: var(--vacation-bg); }
+
+    .week-label {
+      display: flex;
+      flex-direction: column;
+    }
+    .week-label .week-num {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+    }
+    .week-label .week-date {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .week-label .week-thru {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .type-badge.camp {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+    .type-badge.mica {
+      background: #DBEAFE;
+      color: #1D4ED8;
+    }
+
+    .vacation-tags {
+      display: flex;
+      gap: 5px;
+    }
+    .vacation-tag {
+      background: #FFF3CD;
+      color: #7C5000;
+      border: 1px solid #F5A623;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* ── Card body ── */
+    .card-body {
+      padding: 16px 18px 18px;
+    }
+
+    .camp-name {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .camp-name.no-camp {
+      color: var(--mica-accent);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .info-cell {
+      background: #F9F7F4;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .info-cell .info-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .info-cell .info-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .info-cell .info-value.tbd {
+      color: #BBBBBB;
+      font-weight: 400;
+      font-style: italic;
+    }
+    .info-cell .info-value.highlight {
+      color: var(--coral);
+    }
+
+    .info-cell.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .instructions-cell {
+      background: #F9F7F4;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .instructions-cell .info-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .instructions-cell .info-value {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .instructions-cell .info-value.tbd {
+      color: #BBBBBB;
+      font-style: italic;
+    }
+
+    .pack-list {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .pack-list .info-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: #16A34A;
+      margin-bottom: 6px;
+    }
+    .pack-list ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .pack-list ul li {
+      background: #DCFCE7;
+      color: #166534;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .pack-list .tbd {
+      font-size: 13px;
+      color: #BBBBBB;
+      font-style: italic;
+    }
+
+    /* ── Extra activity note ── */
+    .extra-activity {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #FEF9EE;
+      border: 1px solid #FDE68A;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #78350F;
+      margin-bottom: 10px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 500px) {
+      .weeks-grid { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero-photo-wrap">
+  <img class="hero-photo" src="summer-hero.jpg" alt="Manzel & Raya" />
+</div>
+
+<header>
+  <h1>☀️ Manzel & Raya's Summer 2026</h1>
+  <p class="subtitle">June 29 – September 7 &nbsp;·&nbsp; Your one-stop summer hub</p>
+  <div class="legend">
+    <span class="legend-pill">🧒 Manzel</span>
+    <span class="legend-pill">👧🏻 Raya</span>
+  </div>
+</header>
+
+<div class="summary-bar">
+  <div class="summary-stat">
+    <div class="num">11</div>
+    <div class="label">Weeks</div>
+  </div>
+  <div class="summary-stat">
+    <div class="num">9</div>
+    <div class="label">Camp Weeks</div>
+  </div>
+  <div class="summary-stat">
+    <div class="num">2</div>
+    <div class="label">Mica Weeks</div>
+  </div>
+  <div class="summary-stat">
+    <div class="num">7</div>
+    <div class="label">Different Camps</div>
+  </div>
+</div>
+
+<main>
+  <div class="section-title">Week-by-Week Schedule</div>
+
+  <div class="weeks-grid" id="weeks"></div>
+</main>
+
+<footer>
+  Manzel & Raya's Summer 2026 &nbsp;·&nbsp; Last updated March 2026
+</footer>
+
+<script>
+  const weeks = [
+    {
+      weekNum: 1,
+      startDate: "June 29",
+      endDate: "July 3",
+      type: "camp",
+      campName: "Discovery Kids",
+      vacation: [],
+      extraActivity: null,
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: null,
+      pickupInstructions: null,
+      toPack: []
+    },
+    {
+      weekNum: 2,
+      startDate: "July 6",
+      endDate: "July 10",
+      type: "camp",
+      campName: "Robot Camp",
+      vacation: [],
+      extraActivity: null,
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: null,
+      pickupInstructions: null,
+      toPack: []
+    },
+    {
+      weekNum: 3,
+      startDate: "July 13",
+      endDate: "July 17",
+      type: "mica",
+      campName: null,
+      vacation: ["Manzel"],
+      extraActivity: "Heksher State Park",
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: null,
+      pickupInstructions: null,
+      toPack: []
+    },
+    {
+      weekNum: 4,
+      startDate: "July 20",
+      endDate: "July 24",
+      type: "camp",
+      campName: "The Tiny Scientist",
+      vacation: [],
+      extraActivity: null,
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: null,
+      pickupInstructions: null,
+      toPack: []
+    },
+    {
+      weekNum: 5,
+      startDate: "July 27",
+      endDate: "July 31",
+      type: "camp",
+      campName: "Trailblazers",
+      vacation: [],
+      extraActivity: null,
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: null,
+      pickupInstructions: null,
+      toPack: []
+    },
+    {
+      weekNum: 6,
+      startDate: "August 3",
+      endDate: "August 7",
+      type: "camp",
+      campName: "The Tiny Scientist",
+      vacation: [],
+      extraActivity: null,
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: "3:30 PM",
+      pickupInstructions: null,
+      toPack: []
+    },
+    {
+      weekNum: 7,
+      startDate: "August 10",
+      endDate: "August 14",
+      type: "camp",
+      campName: "World of Wonder",
+      vacation: [],
+      extraActivity: null,
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: null,
+      pickupInstructions: null,
+      toPack: []
+    },
+    {
+      weekNum: 8,
+      startDate: "August 17",
+      endDate: "August 21",
+      type: "camp",
+      campName: "Prospect Gymnastics",
+      campNote: "Bed-Stuy",
+      vacation: [],
+      extraActivity: null,
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: "2:30 PM",
+      pickupInstructions: null,
+      toPack: []
+    },
+    {
+      weekNum: 9,
+      startDate: "August 24",
+      endDate: "August 28",
+      type: "camp",
+      campName: "Mi Casita",
+      vacation: ["Raya"],
+      extraActivity: null,
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: "3:00 PM",
+      pickupInstructions: null,
+      toPack: []
+    },
+    {
+      weekNum: 10,
+      startDate: "August 31",
+      endDate: "September 4",
+      type: "camp",
+      campName: "Mi Casita",
+      vacation: ["Raya"],
+      extraActivity: null,
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: "3:00 PM",
+      pickupInstructions: null,
+      toPack: []
+    },
+    {
+      weekNum: 11,
+      startDate: "September 7",
+      endDate: "September 11",
+      type: "mica",
+      campName: null,
+      vacation: [],
+      extraActivity: null,
+      dropoffTime: null,
+      dropoffInstructions: null,
+      pickupTime: null,
+      pickupInstructions: null,
+      toPack: []
+    }
+  ];
+
+  function tbd(val, fallback) {
+    if (val) return `<span class="info-value highlight">${val}</span>`;
+    return fallback
+      ? `<span class="info-value">${fallback}</span>`
+      : `<span class="info-value tbd">TBD</span>`;
+  }
+
+  function tbdText(val) {
+    if (val) return `<span class="info-value">${val}</span>`;
+    return `<span class="info-value tbd">TBD</span>`;
+  }
+
+  function renderCard(w) {
+    const isMica = w.type === "mica";
+    const hasVacation = w.vacation && w.vacation.length > 0;
+    const cardClass = isMica ? "week-card mica-week" : hasVacation ? "week-card vacation-week" : "week-card";
+
+    const vacationTags = (w.vacation || []).map(name =>
+      `<span class="vacation-tag">🏖 ${name} vacation</span>`
+    ).join('');
+
+    const typeBadge = isMica
+      ? `<span class="type-badge mica">👩🏻 With Mica</span>`
+      : `<span class="type-badge camp">🏕 Camp</span>`;
+
+    const campTitle = isMica
+      ? `<div class="camp-name no-camp">With Mica</div>`
+      : `<div class="camp-name">${w.campName}${w.campNote ? ` <span style="font-size:13px;font-weight:400;color:var(--muted);">(${w.campNote})</span>` : ''}</div>`;
+
+    const extraActivity = w.extraActivity
+      ? `<div class="extra-activity">📍 ${w.extraActivity}</div>`
+      : '';
+
+    const packSection = (w.toPack && w.toPack.length > 0)
+      ? `<ul>${w.toPack.map(i => `<li>${i}</li>`).join('')}</ul>`
+      : `<div class="tbd">TBD — add items to pack</div>`;
+
+    return `
+      <div class="${cardClass}">
+        <div class="card-header">
+          <div class="week-label">
+            <span class="week-num">Week ${w.weekNum}</span>
+            <span class="week-date">${w.startDate}</span>
+            <span class="week-thru">thru ${w.endDate}</span>
+          </div>
+          <div class="header-right">
+            ${typeBadge}
+            ${vacationTags ? `<div class="vacation-tags">${vacationTags}</div>` : ''}
+          </div>
+        </div>
+        <div class="card-body">
+          ${campTitle}
+          ${extraActivity}
+          <div class="info-grid">
+            <div class="info-cell">
+              <div class="info-label">Drop-off Time</div>
+              ${tbd(w.dropoffTime)}
+            </div>
+            <div class="info-cell">
+              <div class="info-label">Pick-up Time</div>
+              ${tbd(w.pickupTime)}
+            </div>
+          </div>
+          <div class="instructions-cell">
+            <div class="info-label">Drop-off Instructions</div>
+            ${w.dropoffInstructions
+              ? `<div class="info-value">${w.dropoffInstructions}</div>`
+              : `<div class="info-value tbd">TBD — add drop-off notes</div>`}
+          </div>
+          <div class="instructions-cell">
+            <div class="info-label">Pick-up Instructions</div>
+            ${w.pickupInstructions
+              ? `<div class="info-value">${w.pickupInstructions}</div>`
+              : `<div class="info-value tbd">TBD — add pick-up notes</div>`}
+          </div>
+          <div class="pack-list">
+            <div class="info-label">🎒 What to Pack</div>
+            ${packSection}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById('weeks').innerHTML = weeks.map(renderCard).join('');
+</script>
+</body>
+</html>
