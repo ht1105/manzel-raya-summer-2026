@@ -1169,6 +1169,25 @@
     renderMicaHoursCells();
   }
 
+  function renderTimings() {
+    weeks.forEach(w => {
+      const dropoff = localStorage.getItem(`dropoff-time-week-${w.weekNum}`) ?? w.dropoffTime;
+      const pickup  = localStorage.getItem(`pickup-time-week-${w.weekNum}`)  ?? w.pickupTime;
+
+      // Overview table spans
+      const ovD = document.getElementById(`dropoff-ov-${w.weekNum}`);
+      const ovP = document.getElementById(`pickup-ov-${w.weekNum}`);
+      if (ovD) { ovD.textContent = dropoff || 'TBD'; ovD.className = dropoff ? '' : 'tbd'; }
+      if (ovP) { ovP.textContent = pickup  || 'TBD'; ovP.className = pickup  ? '' : 'tbd'; }
+
+      // Weekly tab editable spans
+      const wkD = document.getElementById(`dropoff-wk-${w.weekNum}`);
+      const wkP = document.getElementById(`pickup-wk-${w.weekNum}`);
+      if (wkD) { wkD.textContent = dropoff || 'TBD'; wkD.style.color = dropoff ? 'var(--coral)' : 'var(--tbd)'; }
+      if (wkP) { wkP.textContent = pickup  || 'TBD'; wkP.style.color = pickup  ? 'var(--coral)' : 'var(--tbd)'; }
+    });
+  }
+
   function tbdSpan(val, fallback) {
     if (val) return `<span style="font-weight:600">${fallback || val}</span>`;
     return `<span class="tbd" style="font-style:italic;color:var(--tbd)">TBD</span>`;
@@ -1190,8 +1209,8 @@
         <td class="week-cell" data-label="">Wk ${w.weekNum}</td>
         <td class="dates-cell" data-label="Dates">${w.startDate} – ${w.endDate}</td>
         <td class="camp-cell" data-label="Camp">${campCell}</td>
-        <td class="time-cell ${w.dropoffTime ? '' : 'tbd'}" data-label="Drop-off">${w.dropoffTime || 'TBD'}</td>
-        <td class="time-cell ${w.pickupTime ? '' : 'tbd'}" data-label="Pick-up">${w.pickupTime || 'TBD'}</td>
+        <td class="time-cell" data-label="Drop-off"><span id="dropoff-ov-${w.weekNum}"></span></td>
+        <td class="time-cell" data-label="Pick-up"><span id="pickup-ov-${w.weekNum}"></span></td>
         <td data-label="Who"><span class="chip ${att.cls}">${w.attendeesOverride || att.label}</span></td>
         <td data-label="Mica's Hours" style="font-size:12px;line-height:1.6" id="mica-hrs-${w.weekNum}"></td>
         <td><button class="view-btn" onclick="event.stopPropagation();showWeek(${w.weekNum})">View →</button></td>
@@ -1550,13 +1569,14 @@
                 <div class="contact-row" style="gap:20px">
                   <div style="flex:1">
                     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px">Drop-off Time</div>
-                    <div style="font-size:18px;font-weight:700;color:${w.dropoffTime ? 'var(--coral)' : 'var(--tbd)'}">${w.dropoffTime || 'TBD'}</div>
+                    <div style="font-size:18px;font-weight:700"><span id="dropoff-wk-${w.weekNum}" class="contact-field-value" contenteditable="true" data-week="${w.weekNum}" data-field="dropoff" data-default="${w.dropoffTime || ''}"></span></div>
                   </div>
                   <div style="flex:1">
                     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px">Pick-up Time</div>
-                    <div style="font-size:18px;font-weight:700;color:${w.pickupTime ? 'var(--coral)' : 'var(--tbd)'}">${w.pickupTime || 'TBD'}</div>
+                    <div style="font-size:18px;font-weight:700"><span id="pickup-wk-${w.weekNum}" class="contact-field-value" contenteditable="true" data-week="${w.weekNum}" data-field="pickup" data-default="${w.pickupTime || ''}"></span></div>
                   </div>
                 </div>
+                <div style="font-size:11px;color:var(--muted);padding:0 18px 8px">✏️ Click time to edit — updates overview table automatically</div>
                 <div style="padding:0 18px 14px">
                   <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">Drop-off Location</div>
                   <div style="font-size:13px;color:${w.dropoffLocation ? 'var(--text)' : 'var(--tbd)'};font-style:${w.dropoffLocation ? 'normal' : 'italic'}">${w.dropoffLocation ? `<a href="https://maps.apple.com/?q=${encodeURIComponent(w.dropoffLocation)}" target="_blank" style="color:var(--sky)">${w.dropoffLocation}</a>` : 'TBD'}</div>
@@ -1728,6 +1748,13 @@
     data[field] = value;
     localStorage.setItem(key, JSON.stringify(data));
 
+    // Sync drop-off / pick-up times to overview table
+    if (field === 'dropoff' || field === 'pickup') {
+      const storageKey = `${field}-time-week-${weekNum}`;
+      localStorage.setItem(storageKey, value);
+      renderTimings();
+    }
+
     // Flash green to confirm save
     el.classList.add('saved-flash');
     setTimeout(() => el.classList.remove('saved-flash'), 800);
@@ -1794,6 +1821,7 @@
 
   // Populate Donde está Mica sections from calendar data
   renderAllMicaViews();
+  renderTimings();
 
   // Load weather for all weeks on page load
   loadAllWeather();
