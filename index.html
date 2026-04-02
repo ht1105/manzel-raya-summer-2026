@@ -755,6 +755,7 @@
               <th>Drop-off</th>
               <th>Pick-up</th>
               <th>Who's Going</th>
+              <th>👩🏻 Mica's Hours</th>
               <th></th>
             </tr>
           </thead>
@@ -1060,6 +1061,26 @@
     return { label: "Manzel & Raya", cls: "both" };
   }
 
+  function toDecimalHours(timeStr) {
+    const [t, period] = timeStr.trim().split(' ');
+    let [h, m] = t.split(':').map(Number);
+    if (period === 'PM' && h !== 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    return h + (m || 0) / 60;
+  }
+
+  function getMicaWeekHours(w) {
+    const ms = w.micaSchedule;
+    const leo   = (toDecimalHours(ms ? ms.morning.end   : "2:00 PM") - toDecimalHours(ms ? ms.morning.start   : "9:00 AM")) * 5;
+    const nanny = (toDecimalHours(ms ? ms.afternoon.end : "6:00 PM") - toDecimalHours(ms ? ms.afternoon.start : "3:00 PM")) * 5;
+    return { leo, nanny };
+  }
+
+  function fmtHours(h) {
+    const whole = Math.floor(h), mins = Math.round((h - whole) * 60);
+    return mins > 0 ? `${whole}h ${mins}m` : `${whole}h`;
+  }
+
   function tbdSpan(val, fallback) {
     if (val) return `<span style="font-weight:600">${fallback || val}</span>`;
     return `<span class="tbd" style="font-style:italic;color:var(--tbd)">TBD</span>`;
@@ -1084,53 +1105,38 @@
         <td class="time-cell ${w.dropoffTime ? '' : 'tbd'}" data-label="Drop-off">${w.dropoffTime || 'TBD'}</td>
         <td class="time-cell ${w.pickupTime ? '' : 'tbd'}" data-label="Pick-up">${w.pickupTime || 'TBD'}</td>
         <td data-label="Who"><span class="chip ${att.cls}">${att.label}</span></td>
+        <td data-label="Mica's Hours" style="font-size:12px;line-height:1.6">${(() => { const mh = getMicaWeekHours(w); return `<span style="color:var(--coral);font-weight:600">Leo ${fmtHours(mh.leo)}</span><br><span style="color:var(--sky);font-weight:600">Nanny ${fmtHours(mh.nanny)}</span>`; })()}</td>
         <td><button class="view-btn" onclick="event.stopPropagation();showWeek(${w.weekNum})">View →</button></td>
       </tr>`;
   });
 
   // ── Mica hours summary ──
   (function() {
-    function toDecimalHours(timeStr) {
-      const [t, period] = timeStr.trim().split(' ');
-      let [h, m] = t.split(':').map(Number);
-      if (period === 'PM' && h !== 12) h += 12;
-      if (period === 'AM' && h === 12) h = 0;
-      return h + (m || 0) / 60;
-    }
-    const DAYS = 5;
     let watchLeoTotal = 0, nannyShareTotal = 0;
     weeks.forEach(w => {
-      const ms = w.micaSchedule;
-      const morningStart = ms ? ms.morning.start : "9:00 AM";
-      const morningEnd   = ms ? ms.morning.end   : "2:00 PM";
-      const afStart      = ms ? ms.afternoon.start : "3:00 PM";
-      const afEnd        = ms ? ms.afternoon.end   : "6:00 PM";
-      watchLeoTotal  += (toDecimalHours(morningEnd) - toDecimalHours(morningStart)) * DAYS;
-      nannyShareTotal += (toDecimalHours(afEnd) - toDecimalHours(afStart)) * DAYS;
+      const mh = getMicaWeekHours(w);
+      watchLeoTotal   += mh.leo;
+      nannyShareTotal += mh.nanny;
     });
-    function fmt(h) {
-      const whole = Math.floor(h), mins = Math.round((h - whole) * 60);
-      return mins > 0 ? `${whole}h ${mins}m` : `${whole}h`;
-    }
     document.getElementById('mica-hours-summary').innerHTML = `
       <div style="margin-top:28px;padding:20px 24px;background:#FFF8F6;border-radius:14px;border:1px solid rgba(232,112,90,0.15)">
-        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--coral);margin-bottom:14px">👩🏻 Mica's Summer Hours</div>
+        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--coral);margin-bottom:14px">👩🏻 Mica's Summer Total</div>
         <div style="display:flex;gap:32px;flex-wrap:wrap">
           <div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px">Watching Leo</div>
-            <div style="font-size:28px;font-weight:800;color:var(--coral)">${fmt(watchLeoTotal)}</div>
+            <div style="font-size:28px;font-weight:800;color:var(--coral)">${fmtHours(watchLeoTotal)}</div>
             <div style="font-size:12px;color:var(--muted)">9 AM–2 PM · Casa Leo</div>
           </div>
           <div style="width:1px;background:rgba(0,0,0,0.08);align-self:stretch"></div>
           <div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px">Nanny Share</div>
-            <div style="font-size:28px;font-weight:800;color:var(--sky)">${fmt(nannyShareTotal)}</div>
+            <div style="font-size:28px;font-weight:800;color:var(--sky)">${fmtHours(nannyShareTotal)}</div>
             <div style="font-size:12px;color:var(--muted)">3–6 PM · Casa Raya</div>
           </div>
           <div style="width:1px;background:rgba(0,0,0,0.08);align-self:stretch"></div>
           <div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px">Total</div>
-            <div style="font-size:28px;font-weight:800;color:var(--text)">${fmt(watchLeoTotal + nannyShareTotal)}</div>
+            <div style="font-size:28px;font-weight:800;color:var(--text)">${fmtHours(watchLeoTotal + nannyShareTotal)}</div>
             <div style="font-size:12px;color:var(--muted)">across all 11 weeks</div>
           </div>
         </div>
