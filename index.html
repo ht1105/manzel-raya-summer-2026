@@ -880,6 +880,13 @@
       pickupTime: null,
       pickupInstructions: null,
       contacts: [],
+      micaDailySchedule: [
+        { day: "Monday",    time: "9:00 AM – 5:00 PM", activity: "Nanny Share", location: "Heckscher State Park" },
+        { day: "Tuesday",   time: "9:00 AM – 5:00 PM", activity: "Nanny Share", location: "Heckscher State Park" },
+        { day: "Wednesday", time: "9:00 AM – 5:00 PM", activity: "Nanny Share", location: "Heckscher State Park" },
+        { day: "Thursday",  time: "TBD",               activity: "TBD",         location: "" },
+        { day: "Friday",    time: "TBD",               activity: "TBD",         location: "" }
+      ],
       dailySchedule: {
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
@@ -1460,6 +1467,15 @@
         <div class="section-card" style="margin-bottom:20px">
           <div class="section-card-header">👩🏻 Donde está Mica</div>
           <div class="section-card-body">
+            ${w.micaDailySchedule ? w.micaDailySchedule.map(d => `
+              <div class="mica-slot">
+                <div class="mica-time-range" style="min-width:110px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">${d.day}</div>
+                <div class="mica-slot-detail">
+                  <div class="mica-activity ${d.activity === 'TBD' ? 'tbd' : ''}">${d.activity}</div>
+                  <div class="mica-time-range" style="font-size:12px">${d.time}</div>
+                  ${d.location ? `<div class="mica-location">📍 ${d.location}</div>` : ''}
+                </div>
+              </div>`).join('') : `
             <div class="mica-slot">
               <div class="mica-time-range">${(w.micaSchedule && w.micaSchedule.morning) ? w.micaSchedule.morning.start + ' – ' + w.micaSchedule.morning.end : '9:00 AM – 2:00 PM'}</div>
               <div class="mica-slot-detail">
@@ -1473,7 +1489,7 @@
                 <div class="mica-activity">${(w.micaSchedule && w.micaSchedule.afternoon) ? w.micaSchedule.afternoon.activity : 'Nanny Share'}</div>
                 <div class="mica-location">📍 ${(w.micaSchedule && w.micaSchedule.afternoon) ? w.micaSchedule.afternoon.location : 'Casa Raya'}</div>
               </div>
-            </div>
+            </div>`}
           </div>
         </div>
 
