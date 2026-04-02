@@ -1609,7 +1609,7 @@
   });
 
   // ── Navigation ──
-  function showTab(tabId) {
+  function showTab(tabId, pushHistory = true) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     const panel = document.getElementById('tab-' + tabId);
@@ -1618,9 +1618,26 @@
     const sel = document.getElementById('details-select');
     if (sel) sel.value = tabId;
     document.querySelector('.main').scrollTo({ top: 0, behavior: 'smooth' });
+    if (pushHistory) {
+      history.pushState({ tabId }, '', '#' + tabId);
+    }
   }
 
   function showWeek(num) { showTab('week-' + num); }
+
+  // Handle browser back/forward
+  window.addEventListener('popstate', e => {
+    const tabId = (e.state && e.state.tabId) || 'overview';
+    showTab(tabId, false);
+  });
+
+  // On load, restore tab from URL hash if present
+  const initHash = location.hash.replace('#', '');
+  if (initHash) {
+    showTab(initHash, false);
+  } else {
+    history.replaceState({ tabId: 'overview' }, '', '#overview');
+  }
 
   document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
     item.addEventListener('click', () => showTab(item.dataset.tab));
