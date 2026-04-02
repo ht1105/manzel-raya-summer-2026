@@ -1335,21 +1335,53 @@
     const note     = document.getElementById('nanny-add-note').value.trim();
     if (!iso || !title) { alert('Please fill in a date and event name.'); return; }
     const events = JSON.parse(localStorage.getItem('nanny-custom-events') || '[]');
-    events.push({ iso, title, time: time || '', location, note });
+    events.push({ iso, title, time: time || '', location, note, color: 'custom' });
     localStorage.setItem('nanny-custom-events', JSON.stringify(events));
-    // Navigate to the month of the new event
     const d = new Date(iso + 'T00:00:00');
     ncalYear = d.getFullYear(); ncalMonth = d.getMonth() + 1;
     renderNannyCalendar();
+    renderMicaSections();
   }
   function deleteNannyEvent(idx) {
     const events = JSON.parse(localStorage.getItem('nanny-custom-events') || '[]');
     events.splice(idx, 1);
     localStorage.setItem('nanny-custom-events', JSON.stringify(events));
     renderNannyCalendar();
+    renderMicaSections();
+  }
+
+  function renderMicaSections() {
+    const eventMap = buildNannyEventMap();
+    const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const DAY_ABBR  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    weeks.forEach(w => {
+      const el = document.getElementById('mica-section-' + w.weekNum);
+      if (!el) return;
+      const base = new Date(w.mondayISO + 'T00:00:00');
+      let html = '';
+      for (let i = 0; i < 5; i++) {
+        const d   = new Date(base.getTime() + i * 86400000);
+        const iso = d.toISOString().slice(0,10);
+        const dayLabel = DAY_NAMES[d.getDay()];
+        const events   = (eventMap[iso] || []).filter(e => e.color !== 'manzel' && e.color !== 'raya');
+        html += `<div class="mica-slot" style="align-items:flex-start">
+          <div style="min-width:90px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding-top:2px">${dayLabel}</div>
+          <div style="flex:1">` +
+          (events.length > 0 ? events.map(e => `
+            <div style="margin-bottom:6px">
+              <div class="mica-activity ${e.activity === 'TBD' || e.title === 'Mica – TBD' ? 'tbd' : ''}">${e.title}</div>
+              ${e.time ? `<div class="mica-time-range">${e.time}</div>` : ''}
+              ${e.location ? `<div class="mica-location">📍 ${e.location}</div>` : ''}
+            </div>`).join('')
+          : `<div class="mica-activity tbd" style="font-style:italic">No events</div>`) +
+          `</div></div>`;
+      }
+      el.innerHTML = html;
+    });
   }
 
   renderNannyCalendar();
+  renderMicaSections();
 
   // ── Week panels ──
   const panelsEl = document.getElementById('week-panels');
@@ -1466,31 +1498,7 @@
         <!-- Donde está Mica -->
         <div class="section-card" style="margin-bottom:20px">
           <div class="section-card-header">👩🏻 Donde está Mica</div>
-          <div class="section-card-body">
-            ${w.micaDailySchedule ? w.micaDailySchedule.map(d => `
-              <div class="mica-slot">
-                <div class="mica-time-range" style="min-width:110px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">${d.day}</div>
-                <div class="mica-slot-detail">
-                  <div class="mica-activity ${d.activity === 'TBD' ? 'tbd' : ''}">${d.activity}</div>
-                  <div class="mica-time-range" style="font-size:12px">${d.time}</div>
-                  ${d.location ? `<div class="mica-location">📍 ${d.location}</div>` : ''}
-                </div>
-              </div>`).join('') : `
-            <div class="mica-slot">
-              <div class="mica-time-range">${(w.micaSchedule && w.micaSchedule.morning) ? w.micaSchedule.morning.start + ' – ' + w.micaSchedule.morning.end : '9:00 AM – 2:00 PM'}</div>
-              <div class="mica-slot-detail">
-                <div class="mica-activity">${(w.micaSchedule && w.micaSchedule.morning) ? w.micaSchedule.morning.activity : 'Watching Leo'}</div>
-                <div class="mica-location">📍 ${(w.micaSchedule && w.micaSchedule.morning) ? w.micaSchedule.morning.location : 'Casa Leo'}</div>
-              </div>
-            </div>
-            <div class="mica-slot">
-              <div class="mica-time-range">${(w.micaSchedule && w.micaSchedule.afternoon) ? w.micaSchedule.afternoon.start + ' – ' + w.micaSchedule.afternoon.end : '3:00 PM – 6:00 PM'}</div>
-              <div class="mica-slot-detail">
-                <div class="mica-activity">${(w.micaSchedule && w.micaSchedule.afternoon) ? w.micaSchedule.afternoon.activity : 'Nanny Share'}</div>
-                <div class="mica-location">📍 ${(w.micaSchedule && w.micaSchedule.afternoon) ? w.micaSchedule.afternoon.location : 'Casa Raya'}</div>
-              </div>
-            </div>`}
-          </div>
+          <div class="section-card-body" id="mica-section-${w.weekNum}"></div>
         </div>
 
         <div class="two-col">
