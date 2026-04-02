@@ -599,6 +599,7 @@
     .ncal-event.custom  { background:#fed7aa; color:#c2410c; }
     .ncal-event.manzel  { background:#ede9fe; color:#5b21b6; }
     .ncal-event.raya    { background:#fce7f3; color:#9d174d; }
+    .ncal-event.tbd     { background:#f3f4f6; color:#6b7280; }
     .ncal-add-btn { position:absolute; top:3px; right:3px; width:16px; height:16px; background:none; border:1px solid #ccc; border-radius:50%; font-size:11px; cursor:pointer; color:var(--muted); display:none; align-items:center; justify-content:center; line-height:1; }
     .ncal-cell:hover .ncal-add-btn { display:flex; }
     .ncal-add-form { margin-top:16px; padding-top:16px; border-top:1px solid rgba(0,0,0,0.08); display:none; }
@@ -1096,6 +1097,14 @@
     { title: "Raya @ Heckscher State Park",   startISO: "2026-07-08", endISO: "2026-07-15", location: "Heckscher State Park", color: "raya"   }
   ];
 
+  // ── Mica day-level overrides (replace default Leo/Nanny events on specific dates) ──
+  const micaDayOverrides = [
+    { startISO: "2026-07-13", endISO: "2026-07-14",
+      events: [{ title: "Nanny Share", time: "9:00 AM – 5:00 PM", location: "Heckscher State Park", color: "nanny" }] },
+    { startISO: "2026-07-15", endISO: "2026-07-17",
+      events: [{ title: "Mica – TBD", time: "TBD", location: "", color: "tbd" }] }
+  ];
+
   // ── Helpers ──
   function getAttendees(w) {
     if (w.vacation.includes("Manzel") && w.vacation.includes("Raya")) return { label: "No Kids", cls: "vacation" };
@@ -1160,17 +1169,33 @@
     const map = {};
     const DAY_MS = 86400000;
     const WDAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+
+    // Build day-level override lookup
+    const overrideMap = {};
+    micaDayOverrides.forEach(ov => {
+      const start = new Date(ov.startISO + 'T00:00:00');
+      const end   = new Date(ov.endISO   + 'T00:00:00');
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        overrideMap[d.toISOString().slice(0,10)] = ov.events;
+      }
+    });
+
     weeks.forEach(w => {
       const ms = w.micaSchedule;
-      const leoTime    = (ms ? ms.morning.start   : '9:00 AM')  + ' – ' + (ms ? ms.morning.end   : '2:00 PM');
-      const nannyTime  = (ms ? ms.afternoon.start : '3:00 PM')  + ' – ' + (ms ? ms.afternoon.end : '6:00 PM');
+      const leoTime   = (ms ? ms.morning.start   : '9:00 AM')  + ' – ' + (ms ? ms.morning.end   : '2:00 PM');
+      const nannyTime = (ms ? ms.afternoon.start : '3:00 PM')  + ' – ' + (ms ? ms.afternoon.end : '6:00 PM');
       const base = new Date(w.mondayISO + 'T00:00:00');
       WDAYS.forEach((_, i) => {
         const d = new Date(base.getTime() + i * DAY_MS);
         const iso = d.toISOString().slice(0,10);
         if (!map[iso]) map[iso] = [];
-        map[iso].push({ title: 'Watching Leo', time: leoTime,   location: 'Casa Leo',  isRecurring: true, color: 'leo' });
-        map[iso].push({ title: 'Nanny Share',  time: nannyTime, location: 'Casa Raya', isRecurring: true, color: 'nanny' });
+        if (overrideMap[iso]) {
+          // Use day-level override instead of default Leo/Nanny
+          overrideMap[iso].forEach(e => map[iso].push({ ...e, isRecurring: true }));
+        } else {
+          map[iso].push({ title: 'Watching Leo', time: leoTime,   location: 'Casa Leo',  isRecurring: true, color: 'leo' });
+          map[iso].push({ title: 'Nanny Share',  time: nannyTime, location: 'Casa Raya', isRecurring: true, color: 'nanny' });
+        }
       });
     });
     const custom = JSON.parse(localStorage.getItem('nanny-custom-events') || '[]');
