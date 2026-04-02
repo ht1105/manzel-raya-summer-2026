@@ -1158,7 +1158,7 @@
       if (!el) return;
       const { leo, nanny } = computeMicaWeekHours(w, eventMap);
       el.innerHTML = (leo > 0 || nanny > 0)
-        ? `<span style="color:var(--coral);font-weight:600">Leo ${fmtHours(leo)}</span><br><span style="color:var(--sky);font-weight:600">Nanny ${fmtHours(nanny)}</span>`
+        ? `<span style="color:var(--coral);font-weight:600">Leo ${fmtHours(leo)}</span><br><span style="color:var(--sky);font-weight:600">Nanny Share ${fmtHours(nanny)}</span>`
         : `<span style="color:var(--muted)">—</span>`;
     });
   }
