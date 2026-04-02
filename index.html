@@ -863,6 +863,10 @@
       pickupTime: "3:30 PM",
       pickupInstructions: null,
       contacts: [],
+      micaSchedule: {
+        morning:   { start: "9:00 AM",  end: "2:30 PM", activity: "Watching Leo", location: "Casa Leo" },
+        afternoon: { start: "3:00 PM",  end: "6:00 PM", activity: "Nanny Share",  location: "Casa Raya" }
+      },
       dailySchedule: {
         Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
       },
@@ -1200,17 +1204,17 @@
           <div class="section-card-header">👩🏻 Donde está Mica</div>
           <div class="section-card-body">
             <div class="mica-slot">
-              <div class="mica-time-range">9:00 AM – 2:00 PM</div>
+              <div class="mica-time-range">${(w.micaSchedule && w.micaSchedule.morning) ? w.micaSchedule.morning.start + ' – ' + w.micaSchedule.morning.end : '9:00 AM – 2:00 PM'}</div>
               <div class="mica-slot-detail">
-                <div class="mica-activity">Watching Leo</div>
-                <div class="mica-location">📍 Casa Leo</div>
+                <div class="mica-activity">${(w.micaSchedule && w.micaSchedule.morning) ? w.micaSchedule.morning.activity : 'Watching Leo'}</div>
+                <div class="mica-location">📍 ${(w.micaSchedule && w.micaSchedule.morning) ? w.micaSchedule.morning.location : 'Casa Leo'}</div>
               </div>
             </div>
             <div class="mica-slot">
-              <div class="mica-time-range">3:00 PM – 6:00 PM</div>
+              <div class="mica-time-range">${(w.micaSchedule && w.micaSchedule.afternoon) ? w.micaSchedule.afternoon.start + ' – ' + w.micaSchedule.afternoon.end : '3:00 PM – 6:00 PM'}</div>
               <div class="mica-slot-detail">
-                <div class="mica-activity">Nanny Share</div>
-                <div class="mica-location">📍 Casa Raya</div>
+                <div class="mica-activity">${(w.micaSchedule && w.micaSchedule.afternoon) ? w.micaSchedule.afternoon.activity : 'Nanny Share'}</div>
+                <div class="mica-location">📍 ${(w.micaSchedule && w.micaSchedule.afternoon) ? w.micaSchedule.afternoon.location : 'Casa Raya'}</div>
               </div>
             </div>
           </div>
