@@ -763,6 +763,9 @@
         </table>
       </div>
       <div id="mica-hours-summary"></div>
+
+      <!-- Nanny Share Calendar -->
+      <div id="nanny-calendar" style="margin-top:32px"></div>
     </div>
 
     <!-- Week tabs (generated) -->
@@ -1142,6 +1145,132 @@
         </div>
       </div>`;
   })();
+
+  // ── Nanny Share Calendar ──
+  function renderNannyCalendar() {
+    const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+    const DAY_MS = 86400000;
+    const custom = JSON.parse(localStorage.getItem('nanny-custom-events') || '[]');
+
+    // Build recurring events from weeks data
+    let recurring = [];
+    weeks.forEach(w => {
+      const ms = w.micaSchedule;
+      const start = ms ? ms.afternoon.start : '3:00 PM';
+      const end   = ms ? ms.afternoon.end   : '6:00 PM';
+      const base  = new Date(w.mondayISO + 'T00:00:00');
+      DAYS.forEach((day, i) => {
+        const d = new Date(base.getTime() + i * DAY_MS);
+        recurring.push({
+          iso: d.toISOString().slice(0,10),
+          label: day.slice(0,3) + ' ' + (d.getMonth()+1) + '/' + d.getDate(),
+          weekNum: w.weekNum,
+          title: 'Nanny Share',
+          time: start + ' – ' + end,
+          location: 'Casa Raya',
+          isRecurring: true
+        });
+      });
+    });
+
+    // Merge and sort
+    const all = [
+      ...recurring,
+      ...custom.map(e => ({ ...e, isRecurring: false }))
+    ].sort((a,b) => a.iso.localeCompare(b.iso));
+
+    // Group by week
+    const byWeek = {};
+    all.forEach(e => {
+      const key = e.weekNum != null ? 'Wk ' + e.weekNum : 'Extra';
+      if (!byWeek[key]) byWeek[key] = { weekNum: e.weekNum, events: [] };
+      byWeek[key].events.push(e);
+    });
+
+    // Render event rows
+    const eventRows = Object.values(byWeek).sort((a,b) => (a.weekNum||99)-(b.weekNum||99)).map(group => {
+      const rows = group.events.map(e => `
+        <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.05)">
+          <div style="min-width:80px;font-size:12px;font-weight:600;color:var(--muted)">${e.label}</div>
+          <div style="flex:1">
+            <span style="font-size:13px;font-weight:600;color:${e.isRecurring ? 'var(--sky)' : 'var(--coral)'}">${e.title}</span>
+            ${e.note ? `<span style="font-size:12px;color:var(--muted)"> · ${e.note}</span>` : ''}
+          </div>
+          <div style="font-size:12px;color:var(--muted);white-space:nowrap">${e.time}</div>
+          <div style="font-size:12px;color:var(--muted)">📍 ${e.location}</div>
+          ${!e.isRecurring ? `<button onclick="deleteNannyEvent('${e.iso}','${e.title.replace(/'/g,"\\'")}',${custom.indexOf(custom.find(c=>c.iso===e.iso&&c.title===e.title))})" style="font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0 4px" title="Remove">✕</button>` : ''}
+        </div>`).join('');
+      return `
+        <div style="margin-bottom:16px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">${group.weekNum ? 'Week ' + group.weekNum : 'Extra Events'}</div>
+          ${rows}
+        </div>`;
+    }).join('');
+
+    document.getElementById('nanny-calendar').innerHTML = `
+      <div style="background:#F0F9FF;border-radius:14px;border:1px solid rgba(56,189,248,0.2);padding:20px 24px">
+        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--sky);margin-bottom:16px">📅 Nanny Share Calendar</div>
+        <div style="max-height:400px;overflow-y:auto;margin-bottom:20px">${eventRows}</div>
+        <div style="border-top:1px solid rgba(0,0,0,0.08);padding-top:16px">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px">+ Add Event</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label style="font-size:11px;color:var(--muted)">Date</label>
+              <input id="nanny-add-date" type="date" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label style="font-size:11px;color:var(--muted)">Event Name</label>
+              <input id="nanny-add-title" type="text" placeholder="e.g. Playdate" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;width:160px">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label style="font-size:11px;color:var(--muted)">Time</label>
+              <input id="nanny-add-time" type="text" placeholder="e.g. 4:00 – 5:00 PM" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;width:150px">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label style="font-size:11px;color:var(--muted)">Location</label>
+              <input id="nanny-add-location" type="text" placeholder="e.g. Casa Raya" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;width:140px">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label style="font-size:11px;color:var(--muted)">Note (optional)</label>
+              <input id="nanny-add-note" type="text" placeholder="optional note" style="padding:6px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;width:140px">
+            </div>
+            <button onclick="addNannyEvent()" style="padding:7px 18px;background:var(--sky);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">Add</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function addNannyEvent() {
+    const iso      = document.getElementById('nanny-add-date').value;
+    const title    = document.getElementById('nanny-add-title').value.trim();
+    const time     = document.getElementById('nanny-add-time').value.trim();
+    const location = document.getElementById('nanny-add-location').value.trim() || 'Casa Raya';
+    const note     = document.getElementById('nanny-add-note').value.trim();
+    if (!iso || !title) return alert('Please fill in a date and event name.');
+    const d = new Date(iso + 'T00:00:00');
+    const label = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()] + ' ' + (d.getMonth()+1) + '/' + d.getDate();
+    // Find weekNum
+    let weekNum = null;
+    weeks.forEach(w => {
+      const base = new Date(w.mondayISO + 'T00:00:00');
+      const end  = new Date(base.getTime() + 4 * 86400000);
+      if (d >= base && d <= end) weekNum = w.weekNum;
+    });
+    const events = JSON.parse(localStorage.getItem('nanny-custom-events') || '[]');
+    events.push({ iso, label, weekNum, title, time: time || 'TBD', location, note });
+    localStorage.setItem('nanny-custom-events', JSON.stringify(events));
+    renderNannyCalendar();
+  }
+
+  function deleteNannyEvent(iso, title, idx) {
+    const events = JSON.parse(localStorage.getItem('nanny-custom-events') || '[]');
+    const i = events.findIndex((e,j) => e.iso === iso && e.title === title && j === idx);
+    if (i > -1) events.splice(i, 1);
+    localStorage.setItem('nanny-custom-events', JSON.stringify(events));
+    renderNannyCalendar();
+  }
+
+  renderNannyCalendar();
 
   // ── Week panels ──
   const panelsEl = document.getElementById('week-panels');
