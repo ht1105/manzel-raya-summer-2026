@@ -1431,7 +1431,7 @@
               <span class="meta-chip ${isMica ? 'mica' : 'camp'}">${isMica ? '👩🏻 Mica week' : '🏕 Camp week'}</span>
               ${w.dropoffTime ? `<span class="meta-chip time">🚗 Drop-off ${w.dropoffTime}</span>` : ''}
               ${w.pickupTime  ? `<span class="meta-chip time">🏁 Pick-up ${w.pickupTime}</span>`  : ''}
-              <span class="meta-chip ${att.cls === 'both' ? 'camp' : att.cls === 'raya-only' ? 'camp' : 'camp'}" style="background:#F5F3FF;color:#5B21B6">👧🏻 ${att.label}</span>
+              <span class="meta-chip ${att.cls === 'both' ? 'camp' : att.cls === 'raya-only' ? 'camp' : 'camp'}" style="background:#F5F3FF;color:#5B21B6">👧🏻 ${w.attendeesOverride || att.label}</span>
               ${w.extraActivity ? `<span class="meta-chip" style="background:#FEF9EE;color:#78350F">📍 ${w.extraActivity}</span>` : ''}
               ${w.vacation.length > 0 ? w.vacation.map(v => `<span class="meta-chip vacation">🏖 ${v} on vacation</span>`).join('') : ''}
             </div>
