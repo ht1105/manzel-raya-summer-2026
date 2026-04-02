@@ -872,6 +872,7 @@
       campLink: null,
       campNote: null,
       vacation: ["Manzel"],
+      attendeesOverride: "3 Day Manzel & Raya · 2 Day TBD",
       extraActivity: "Heksher State Park",
       dropoffTime: null,
       dropoffLocation: null,
@@ -1156,7 +1157,7 @@
         <td class="camp-cell" data-label="Camp">${campCell}</td>
         <td class="time-cell ${w.dropoffTime ? '' : 'tbd'}" data-label="Drop-off">${w.dropoffTime || 'TBD'}</td>
         <td class="time-cell ${w.pickupTime ? '' : 'tbd'}" data-label="Pick-up">${w.pickupTime || 'TBD'}</td>
-        <td data-label="Who"><span class="chip ${att.cls}">${att.label}</span></td>
+        <td data-label="Who"><span class="chip ${att.cls}">${w.attendeesOverride || att.label}</span></td>
         <td data-label="Mica's Hours" style="font-size:12px;line-height:1.6">${(() => { const mh = getMicaWeekHours(w); return `<span style="color:var(--coral);font-weight:600">Leo ${fmtHours(mh.leo)}</span><br><span style="color:var(--sky);font-weight:600">Nanny ${fmtHours(mh.nanny)}</span>`; })()}</td>
         <td><button class="view-btn" onclick="event.stopPropagation();showWeek(${w.weekNum})">View →</button></td>
       </tr>`;
