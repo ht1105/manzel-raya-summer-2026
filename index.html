@@ -597,6 +597,8 @@
     .ncal-event.leo     { background:#d1fae5; color:#065f46; }
     .ncal-event.nanny   { background:#bae6fd; color:#0369a1; }
     .ncal-event.custom  { background:#fed7aa; color:#c2410c; }
+    .ncal-event.manzel  { background:#ede9fe; color:#5b21b6; }
+    .ncal-event.raya    { background:#fce7f3; color:#9d174d; }
     .ncal-add-btn { position:absolute; top:3px; right:3px; width:16px; height:16px; background:none; border:1px solid #ccc; border-radius:50%; font-size:11px; cursor:pointer; color:var(--muted); display:none; align-items:center; justify-content:center; line-height:1; }
     .ncal-cell:hover .ncal-add-btn { display:flex; }
     .ncal-add-form { margin-top:16px; padding-top:16px; border-top:1px solid rgba(0,0,0,0.08); display:none; }
@@ -1088,6 +1090,12 @@
     }
   ];
 
+  // ── Static calendar events (multi-day) ──
+  const calendarEvents = [
+    { title: "Manzel @ Heckscher State Park", startISO: "2026-07-10", endISO: "2026-07-17", location: "Heckscher State Park", color: "manzel" },
+    { title: "Raya @ Heckscher State Park",   startISO: "2026-07-08", endISO: "2026-07-15", location: "Heckscher State Park", color: "raya"   }
+  ];
+
   // ── Helpers ──
   function getAttendees(w) {
     if (w.vacation.includes("Manzel") && w.vacation.includes("Raya")) return { label: "No Kids", cls: "vacation" };
@@ -1170,6 +1178,16 @@
       if (!map[e.iso]) map[e.iso] = [];
       map[e.iso].push({ ...e, isRecurring: false, idx });
     });
+    // Static multi-day events
+    calendarEvents.forEach(ev => {
+      const start = new Date(ev.startISO + 'T00:00:00');
+      const end   = new Date(ev.endISO   + 'T00:00:00');
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const iso = d.toISOString().slice(0,10);
+        if (!map[iso]) map[iso] = [];
+        map[iso].push({ title: ev.title, time: '', location: ev.location, isRecurring: true, color: ev.color });
+      }
+    });
     return map;
   }
 
@@ -1247,6 +1265,8 @@
         <div style="margin-top:10px;font-size:11px;color:var(--muted);display:flex;gap:14px;align-items:center;flex-wrap:wrap">
           <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#d1fae5;margin-right:4px"></span>Watching Leo</span>
           <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#bae6fd;margin-right:4px"></span>Nanny Share</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#ede9fe;margin-right:4px"></span>Manzel</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#fce7f3;margin-right:4px"></span>Raya</span>
           <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#fed7aa;margin-right:4px"></span>Custom event</span>
           <span>Hover a day and click <strong>+</strong> to add · Click custom event to delete</span>
         </div>
