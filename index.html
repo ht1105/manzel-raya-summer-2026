@@ -1381,7 +1381,6 @@
   }
 
   renderNannyCalendar();
-  renderMicaSections();
 
   // ── Week panels ──
   const panelsEl = document.getElementById('week-panels');
@@ -1766,6 +1765,9 @@
     const saved = localStorage.getItem(`signup-status-week-${w.weekNum}`);
     if (saved) renderStatus(w.weekNum, saved);
   });
+
+  // Populate Donde está Mica sections from calendar data
+  renderMicaSections();
 
   // Load weather for all weeks on page load
   loadAllWeather();
