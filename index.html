@@ -1079,9 +1079,10 @@
 
   // ── Static calendar events (multi-day) ──
   const calendarEvents = [
-    { title: "Manzel @ Heckscher State Park", startISO: "2026-07-10", endISO: "2026-07-17", location: "Heckscher State Park", color: "manzel" },
-    { title: "Raya @ Heckscher State Park",   startISO: "2026-07-08", endISO: "2026-07-15", location: "Heckscher State Park", color: "raya"   },
-    { title: "Raya Away in HI",               startISO: "2026-08-27", endISO: "2026-09-02", location: "Hawaii",               color: "raya"   }
+    { title: "Manzel @ Heckscher State Park",  startISO: "2026-07-10", endISO: "2026-07-17", location: "Heckscher State Park", color: "manzel" },
+    { title: "Raya @ Heckscher State Park",    startISO: "2026-07-08", endISO: "2026-07-15", location: "Heckscher State Park", color: "raya"   },
+    { title: "Raya Away in HI",                startISO: "2026-08-27", endISO: "2026-09-02", location: "Hawaii",               color: "raya"   },
+    { title: "Manzel & Leo Away in the Berks", startISO: "2026-08-31", endISO: "2026-09-04", location: "The Berkshires",       color: "manzel" }
   ];
 
   // ── Mica day-level overrides (replace default Leo/Nanny events on specific dates) ──
@@ -1095,7 +1096,9 @@
     { startISO: "2026-08-27", endISO: "2026-08-28",
       events: [{ title: "Watching Leo", time: "9:00 AM – 6:00 PM", location: "Casa Leo", color: "leo" }] },
     { startISO: "2026-08-31", endISO: "2026-09-02",
-      events: [{ title: "Watching Leo", time: "9:00 AM – 6:00 PM", location: "Casa Leo", color: "leo" }] }
+      events: [{ title: "Mica – TBD", time: "TBD", location: "", color: "tbd" }] },
+    { startISO: "2026-09-03", endISO: "2026-09-04",
+      events: [{ title: "Nanny Share", time: "3:00 PM – 6:00 PM", location: "Casa Raya", color: "nanny" }] }
   ];
 
   // ── Helpers ──
