@@ -975,7 +975,7 @@
       },
       toPack: [],
       notes: null,
-      reschedulePolicy: null
+      reschedulePolicy: "SPLAT CAMP 2026 CANCELLATION AND REFUND POLICY — Effective November 29th, 2025\n\nPayment: Families may pay in full at checkout or use the Sawyer payment plan. Refund timelines apply to the amount paid, regardless of payment method.\n\nRefunds Before May 1: Refund of all payments made minus a $150 early cancellation fee.\n\nAfter May 1: Camp tuition becomes nonrefundable for any reason.\n\nCancellations Within 24 Hours of Registration: Full refund of the amount paid minus a 3% processing fee.\n\nPromotions and Discounts: Sales, promotions, or discounts do not change refund deadlines or cancellation rules.\n\nSwapping Weeks: Families may request to switch to another week if space is available. Swaps are at Splat Camp discretion and not guaranteed.\n\nAftercare and Early Drop Off: May be cancelled more than 24 hours in advance for a credit valid for 6 months. Nonrefundable within 24 hours. Unused aftercare bought as a weekly bundle cannot be transferred.\n\nIf a child arrives for early drop-off without a booking: Families will be charged the standard daily early drop-off rate at drop-off. Children cannot be admitted early without payment.\n\nLate Pickups at 3:00 (Regular Dismissal): Pickups after 3:00 will be charged $15 for every 15 minutes after 3:15.\n\nLate Pickups at 5:30 (Aftercare Dismissal): Pickups after 5:30 will be charged $30 for every 15 minutes after 5:30. Repeated late pickups may result in loss of aftercare privileges.\n\nMedical or Unforeseeable Events: With documentation, families may request a credit for future Splat programming. Requests must be submitted within 7 days of the missed session.\n\nSummer School Exception: If a child must attend summer school, families may receive a refund minus the $150 early cancellation fee if requested at least 7 days before the start date.\n\nSibling Discounts: Sibling discounts apply only when siblings attend the same weeks. If weeks are removed, sibling discounts may be adjusted.\n\nBehavioral Dismissals: If a camper is dismissed due to behavior concerns, no refunds or credits will be issued.\n\nProgram Adjustments: If programming must be modified due to building operations or updated regulations, alternate programming will be provided, and the cancellation policy remains in effect.\n\nRefund Processing Timeline: Refunds are processed within 30 days of confirmation."
     },
     {
       weekNum: 7,
@@ -1594,7 +1594,7 @@
             <div class="section-card">
               <div class="section-card-header">🔄 Rescheduling Policy</div>
               <div class="section-card-body">
-                <div class="notes-body ${w.reschedulePolicy ? '' : 'tbd'}">${w.reschedulePolicy || 'No rescheduling policy added yet.'}</div>
+                <div class="notes-body ${w.reschedulePolicy ? '' : 'tbd'}" style="${w.reschedulePolicy ? 'white-space:pre-line' : ''}">${w.reschedulePolicy || 'No rescheduling policy added yet.'}</div>
               </div>
             </div>
           </div>
